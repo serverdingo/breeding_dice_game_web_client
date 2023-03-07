@@ -419,7 +419,7 @@
         </b-column>
       </b-row>
     </div>
-        <b-row class="justify-content-md-center">
+      <b-row class="justify-content-md-center">
         <b-col col lg="2">
           <h4>
           <b-card
@@ -479,42 +479,106 @@
         </b-card>
         </h4>
       </b-col>
+    </b-row>
+    <div v-if="overallWinner === 'bred'">
+      <b-row class="justify-content-md-center text-center">
+        <b-col md="auto">
+          <b-img src="https://static.f-list.net/images/eicon/missionfailed.gif"
+          fluid alt="Mission Failed">
+          </b-img>
+        </b-col>
+        <b-col md="auto">
+          <h1 class="text-primary" align-self="center"><br/>Impregnation Failed...</h1>
+        </b-col>
+        <b-col md="auto">
+          <b-img src="https://static.f-list.net/images/eicon/missionfailed.gif"
+          fluid alt="Mission Failed">
+          </b-img>
+        </b-col>
       </b-row>
-      <h2 class="text-center"><b-button size="lg" id="rollBreederButton"
-              variant="dark"  @click="startPhaseOvu"
-              v-b-toggle.accordion-ovu>
-              GIMME THEM EGGIES
-      </b-button></h2>
-    </b-collapse>
-    <!--
-         ____              _       _   _                _____  _
-        / __ \            | |     | | (_)              |  __ \| |
-       | |  | |_   ___   _| | __ _| |_ _  ___  _ __    | |__) | |__   __ _ ___  ___
-       | |  | \ \ / / | | | |/ _` | __| |/ _ \| '_ \   |  ___/| '_ \ / _` / __|/ _ \
-       | |__| |\ V /| |_| | | (_| | |_| | (_) | | | |  | |    | | | | (_| \__ \  __/
-        \____/  \_/  \__,_|_|\__,_|\__|_|\___/|_| |_|  |_|    |_| |_|\__,_|___/\___|
-    -->
-    <b-collapse id="accordion-ovu" visible accordion="main-accordion" role="tabpanel">
-            <h2 class="text-center"><b-button size="lg" id="rollBreederButton"
-              variant="dark"  @click="startPhaseFinal"
-              v-b-toggle.accordion-final>
-              GO TO FINAL
-      </b-button></h2>
-    </b-collapse>
-    <!--
-      ______ _             _   _____  _
-     |  ____(_)           | | |  __ \| |
-     | |__   _ _ __   __ _| | | |__) | |__   __ _ ___  ___
-     |  __| | | '_ \ / _` | | |  ___/| '_ \ / _` / __|/ _ \
-     | |    | | | | | (_| | | | |    | | | | (_| \__ \  __/
-     |_|    |_|_| |_|\__,_|_| |_|    |_| |_|\__,_|___/\___|
-    -->
-    <b-collapse id="accordion-final" visible accordion="main-accordion" role="tabpanel">
-    </b-collapse>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+      <br/>
+      <b-row class="justify-content-md-center">
+        <h2 class="text-center">
+          <b-button size="lg" id="rollBreederButton"
+                variant="dark"  @click="tryAgain">
+                Try again?
+          </b-button>
+        </h2>
+      </b-row>
+    </div>
+    <div v-else>
+      <b-row class="justify-content-md-center text-center">
+        <b-col md="auto">
+          <b-img src="https://static.f-list.net/images/eicon/wombknot2.gif"
+          style="transform: scaleX(-1);" fluid alt="Preggo R2">
+          </b-img>
+          <b-img src="https://static.f-list.net/images/eicon/wombknot1.gif"
+          style="transform: scaleX(-1);" fluid alt="Preggo R1">
+          </b-img>
+        </b-col>
+        <b-col md="auto">
+          <h1 class="text-danger" align-self="center"><br/>Impregnation Successful</h1>
+        </b-col>
+        <b-col md="auto">
+          <b-img src="https://static.f-list.net/images/eicon/wombknot1.gif" fluid alt="Preggo R1">
+          </b-img>
+          <b-img src="https://static.f-list.net/images/eicon/wombknot2.gif" fluid alt="Preggo R2">
+          </b-img>
+        </b-col>
+      </b-row>
+      <br/>
+      <b-row class="justify-content-md-center">
+
+          <b-col col lg="2" class="text-right">
+            <b-icon id="ovu-help-button"
+            icon="question-circle-fill" aria-label="Help"></b-icon>
+            <b-tooltip target="ovu-help-button" triggers="hover">
+              Can't make a baby without dropping a few
+            eggs, eh?</b-tooltip>
+          </b-col>
+          <b-col cols="12" md="auto">
+            <h2>
+              <b-button size="lg" id="rollBreederButton"
+                    variant="dark"  @click="startPhaseOvu"
+                    class="text-center" v-b-toggle.accordion-ovu>
+                    Ovulate
+              </b-button>
+            </h2>
+          </b-col>
+          <b-col col lg="2"></b-col>
+
+      </b-row>
+  </div>
+  </b-collapse>
+  <!--
+       ____              _       _   _                _____  _
+      / __ \            | |     | | (_)              |  __ \| |
+     | |  | |_   ___   _| | __ _| |_ _  ___  _ __    | |__) | |__   __ _ ___  ___
+     | |  | \ \ / / | | | |/ _` | __| |/ _ \| '_ \   |  ___/| '_ \ / _` / __|/ _ \
+     | |__| |\ V /| |_| | | (_| | |_| | (_) | | | |  | |    | | | | (_| \__ \  __/
+      \____/  \_/  \__,_|_|\__,_|\__|_|\___/|_| |_|  |_|    |_| |_|\__,_|___/\___|
+  -->
+  <b-collapse id="accordion-ovu" visible accordion="main-accordion" role="tabpanel">
+          <h2 class="text-center"><b-button size="lg" id="rollBreederButton"
+            variant="dark"  @click="startPhaseFinal"
+            v-b-toggle.accordion-final>
+            GO TO FINAL
+    </b-button></h2>
+  </b-collapse>
+  <!--
+    ______ _             _   _____  _
+   |  ____(_)           | | |  __ \| |
+   | |__   _ _ __   __ _| | | |__) | |__   __ _ ___  ___
+   |  __| | | '_ \ / _` | | |  ___/| '_ \ / _` / __|/ _ \
+   | |    | | | | | (_| | | | |    | | | | (_| \__ \  __/
+   |_|    |_|_| |_|\__,_|_| |_|    |_| |_|\__,_|___/\___|
+  -->
+  <b-collapse id="accordion-final" visible accordion="main-accordion" role="tabpanel">
+  </b-collapse>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
   <footer class="text-center fixed-bottom">
     <b-card>
       <b-row align-h="center">
@@ -537,11 +601,13 @@
 </template>
 <script>
 // import axios from 'axios';
-import '../assets/dice.css';
 import { calculateMods } from '../breed';
 
 export default {
   name: 'Breed',
+  title() {
+    return 'Breed';
+  },
   data() {
     return {
       phase: 0,
@@ -616,6 +682,8 @@ export default {
           winner: '',
         },
       },
+      overallWinner: '',
+
       bredSeries: [-53],
       breederSeries: [93],
       msg: '',
@@ -865,6 +933,9 @@ export default {
 
       const matchups = Object.keys(this.playerRolls);
 
+      let bredTotalWins = 0;
+      let breederTotalWins = 0;
+
       for (let i = 0; i < matchups.length; i += 1) {
         this.playerRolls[matchups[i]].bredCalcValue = this.playerRolls[matchups[i]].bredValue
           + this.mods.bred_mod;
@@ -888,10 +959,24 @@ export default {
           }
         }
 
+        if (winner === 'bred') {
+          bredTotalWins += 1;
+        } else if (winner === 'breeder') {
+          breederTotalWins += 1;
+        } // If tied, don't add a win to either
+
         this.playerRolls[matchups[i]].winner = winner;
         this.playerRolls[matchups[i]].bredCrit = bredCrit;
         this.playerRolls[matchups[i]].breederCrit = breederCrit;
       }
+      if (bredTotalWins !== breederTotalWins) {
+        this.overallWinner = (bredTotalWins > breederTotalWins) ? 'bred' : 'breeder';
+      } else {
+        this.overallWinner = 'tie';
+      }
+    },
+    tryAgain() {
+      window.location.reload(); // TODO: Reload page with saved settings, or do a 'soft reload'
     },
   },
   created() {

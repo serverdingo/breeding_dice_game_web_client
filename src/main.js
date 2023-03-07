@@ -4,6 +4,10 @@ import VueApexCharts from 'vue-apexcharts';
 import App from './App.vue';
 import router from './router';
 import 'bootstrap/dist/css/bootstrap.css';
+// import 'bootstrap-vue/src/index.scss';
+import titleMixin from './titleMixin';
+
+Vue.mixin(titleMixin);
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
