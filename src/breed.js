@@ -384,7 +384,7 @@ function getBabies(playerOptions, playerRolls, eggs) {
     babies.push(...babiesToAdd);
   }
 
-  return { updatedEggs: eggsCopy, babiesList: babies };
+  return { updatedEggs: eggsCopy, babiesList: babies, fertChance: (100 + fertMod) };
 }
 
 export {

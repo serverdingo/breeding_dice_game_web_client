@@ -405,7 +405,7 @@
                        |_|             |___/
     -->
     <b-collapse id="accordion-impreg" visible accordion="main-accordion" role="tabpanel">
-    <div id="charts" class="center">
+    <div id="charts" class="center" v-if="phase === 1">
       <b-row align-h="around">
         <b-column>
           <apexchart type="radialBar" height="350" :options="bredChartOptions"
@@ -419,7 +419,7 @@
         </b-column>
       </b-row>
     </div>
-      <b-row class="justify-content-md-center">
+      <b-row class="justify-content-md-center" v-if="phase === 1">
         <b-col col lg="2">
           <h4>
           <b-card
@@ -480,6 +480,7 @@
         </h4>
       </b-col>
     </b-row>
+
     <div v-if="overallWinner === 'bred'">
       <b-row class="justify-content-md-center text-center">
         <b-col md="auto">
@@ -559,7 +560,7 @@
       \____/  \_/  \__,_|_|\__,_|\__|_|\___/|_| |_|  |_|    |_| |_|\__,_|___/\___|
   -->
   <b-collapse id="accordion-ovu" visible accordion="main-accordion" role="tabpanel">
-      <div id="ovu-charts" class="center">
+      <div id="ovu-charts" class="center" v-if="phase === 2">
         <!-- TODO: Add some fun egg charts~ -->
         <!--<b-row align-h="around">
           <b-column>
@@ -574,7 +575,7 @@
           </b-column>
         </b-row> -->
       </div>
-        <b-row class="justify-content-md-center">
+        <b-row class="justify-content-md-center" v-if="phase === 2">
           <b-column md="auto">
             <h4>
             <b-card
@@ -590,6 +591,14 @@
           </b-column>
       </b-row>
       <div v-if="eggs.count <= 0">
+        <b-row class="justify-content-md-center">
+          <h2 class="text-center">
+            <b-button size="lg" id="tryAgainOvu"
+                  variant="dark"  @click="tryAgain">
+                  Try again?
+            </b-button>
+          </h2>
+        </b-row>
       </div>
       <div v-else>
         <b-row class="justify-content-md-center text-center">
@@ -641,26 +650,18 @@
    |_|    |_|_| |_|\__,_|_| |_|    |_| |_|\__,_|___/\___|
   -->
   <b-collapse id="accordion-final" visible accordion="main-accordion" role="tabpanel">
-    <div id="fert-charts" class="center">
+    <div id="fert-charts" class="center" v-if="(phase === 3)">
       <!-- TODO: Add some fun egg charts~ -->
-      <b-row align-h="around">
-        <b-column>
-          <!--<apexchart type="donut" :options="babiesChartOptions" :series="babiesSeries">
-          </apexchart>-->
-        </b-column>
-        <b-column>
-          <apexchart type="donut" height="350"
-          :options="genderChartOptions" :series="genderSeries">
-          </apexchart>
-        </b-column>
-        <b-column>
-          <apexchart type="donut" height="350"
-          :options="speciesChartOptions" :series="speciesSeries">
+      <b-row align-v="stretch" class="justify-content-md-center">
+        <b-column md="auto">
+          <apexchart type="donut" height="600"
+          :options="babiesChartOptions" :series="babiesSeries">
           </apexchart>
         </b-column>
       </b-row>
     </div>
-      <b-row class="justify-content-md-center">
+    <br/>
+      <b-row class="justify-content-md-center" v-if="(phase === 3)">
         <b-column md="auto">
           <h4>
           <b-card
@@ -668,13 +669,53 @@
             class="text-center">
             <b-card-body no-body class="text-center">
               <b-row align-h="center">
-                  You made <h2><b class="text-danger">{{babies.length}}</b></h2> babies from
-                  <h2><b class="text-primary">{{eggs.count}}</b></h2> eggs!
+                  Your chance to fertilize an egg was {{fertilizeChance}}%!
+              </b-row>
+              <br/>
+              <b-row align-h="center">
+                  You made&nbsp;<h2><b class="text-danger">{{babies.length}}</b></h2>&nbsp;babies
+                  from&nbsp;<h2><b class="text-primary">{{eggs.count}}</b></h2>&nbsp;eggs!
               </b-row>
             </b-card-body>
           </b-card>
         </h4>
       </b-column>
+    </b-row>
+      <b-row class="justify-content-md-center" v-if="(phase === 3) && (babies.length > 0)">
+        <b-col col lg="4">
+          <b-card no-body class="mb-1">
+            <b-card-header header-tag="header" class="p-1" role="tab">
+              <b-button block v-b-toggle.collapse-gender variant="info">Gender Details</b-button>
+            </b-card-header>
+            <b-collapse id="collapse-gender" role="tabpanel">
+                <b-card-body no-body class="text-center">
+                  <b-row align-h="center">
+                    <apexchart type="donut" height="350"
+                      :options="genderChartOptions" :series="genderSeries">
+                    </apexchart>
+                  </b-row>
+                </b-card-body>
+              </b-collapse>
+          </b-card>
+        </b-col>
+        <b-col col lg="4">
+          <b-card no-body class="mb-1">
+            <b-card-header header-tag="header" class="p-1" role="tab">
+              <b-button block v-b-toggle.collapse-species variant="success">
+                Species Details
+              </b-button>
+            </b-card-header>
+            <b-collapse id="collapse-species" role="tabpanel">
+                <b-card-body no-body class="text-center">
+                  <b-row align-h="center">
+                    <apexchart type="donut" height="350"
+                      :options="speciesChartOptions" :series="speciesSeries">
+                    </apexchart>
+                  </b-row>
+                </b-card-body>
+              </b-collapse>
+          </b-card>
+        </b-col>
     </b-row>
     <div>
       <b-row class="justify-content-md-center">
@@ -699,14 +740,16 @@
   <br/>
   <br/>
   <br/>
-  <footer class="text-center fixed-bottom">
+  <footer class="text-center fixed-bottom" v-if="!isMobile()">
     <b-card>
+      <b-card-text>
       <b-row align-h="center">
         <b-col md="auto">
           <b-icon icon="envelope"></b-icon>
         </b-col>
         <b-col md="auto">
-          Questions? Comments? Concerns? Confusions? <a href="https://www.f-list.net/c/serv/">Send a note!</a>
+          Questions? Comments? Concerns? Confusions? <a href="https://www.f-list.net/c/serv/">Send a note!
+          </a>
         </b-col>
         <b-col md="auto">
           <b-icon icon="github"></b-icon>
@@ -715,6 +758,28 @@
           <a href="https://github.com/serverdingo/breeding_dice_game_web_client">serverdingo</a>
         </b-col>
       </b-row>
+      </b-card-text>
+    </b-card>
+  </footer>
+  <footer class="text-center" v-else>
+    <b-card>
+      <b-card-text>
+      <b-row align-h="center">
+        <b-col md="auto">
+          <b-icon icon="envelope"></b-icon>
+        </b-col>
+        <b-col md="auto">
+          Questions? Comments? Concerns? Confusions? <a href="https://www.f-list.net/c/serv/">Send a note!
+          </a>
+        </b-col>
+        <b-col md="auto">
+          <b-icon icon="github"></b-icon>
+        </b-col>
+        <b-col md="auto">
+          <a href="https://github.com/serverdingo/breeding_dice_game_web_client">serverdingo</a>
+        </b-col>
+      </b-row>
+      </b-card-text>
     </b-card>
   </footer>
   </div>
@@ -732,6 +797,8 @@ export default {
     return {
       phase: 0,
       playerOptions: [],
+
+      fertilizeChance: 0,
 
       mods: {},
 
@@ -855,18 +922,20 @@ export default {
       babiesSeries: [],
       babiesChartOptions: {
         chart: {
-          height: 350,
+          height: 450,
           type: 'donut',
           offsetY: -10,
         },
-        labels: ['Singles', 'Twins', 'Triplets', 'Quadruplets', 'Quintuplets+'],
+        colors: ['#353638', '#0234c9', '#c96902', '#34c72c', '#c22929', '#d117ce'],
+        labels: ['Unfertilized', 'Singles', 'Twins', 'Triplets', 'Quadruplets', 'Quintuplets+'],
         responsive: [{
-          breakpoint: 480,
+          breakpoint: 580,
           options: {
             chart: {
-              width: 200,
+              width: 250,
             },
             legend: {
+              height: 350,
               position: 'bottom',
             },
           },
@@ -880,6 +949,7 @@ export default {
           type: 'donut',
           offsetY: -10,
         },
+        colors: ['#3d81a8', '#a6468a', '#431d8f'],
         labels: ['Males', 'Females', 'Herms'],
         responsive: [{
           breakpoint: 480,
@@ -901,7 +971,8 @@ export default {
           type: 'donut',
           offsetY: -10,
         },
-        labels: ['Bred\'s species', 'Breeder\'s species', 'Hybrid'],
+        colors: ['#002bc7', '#c70007', '#aa02b0'],
+        labels: ['Bred\'s', 'Breeder\'s', 'Hybrid'],
         responsive: [{
           breakpoint: 480,
           options: {
@@ -1034,19 +1105,12 @@ export default {
     };
   },
   methods: {
-    /**
-     * getMessage() {
-      const path = 'http://localhost:5000/breed';
-      axios.get(path)
-        .then((res) => {
-          this.msg = res.data;
-        })
-        .catch((error) => {
-          // eslint-disable-next-line
-          console.error(error);
-        });
+    isMobile() {
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        return true;
+      }
+      return false;
     },
-    */
     rollDiceBred() {
       const dice = {
         sides: 10,
@@ -1076,6 +1140,7 @@ export default {
       this.playerRolls.diceRoll5.breederValue = dice.roll();
     },
     startPhaseImpreg() {
+      this.phase = 1;
       this.playerOptions = {
         bred_dice: this.bred_dice,
         breeder_dice: this.breeder_dice,
@@ -1166,15 +1231,18 @@ export default {
     },
 
     startPhaseOvu() {
+      this.phase = 2;
       this.eggs.count = getNumEggs(this.playerOptions, this.playerRolls);
     },
 
     startFinalPhase() {
+      this.phase = 3;
       // I'm pretty sure this variable name has put me on some kind of watch list
       const eggsAndBabies = getBabies(this.playerOptions, this.playerRolls, this.eggs);
       console.log(eggsAndBabies);
       this.eggs = eggsAndBabies.updatedEggs;
       this.babies = eggsAndBabies.babiesList;
+      this.fertilizeChance = eggsAndBabies.fertChance;
 
       const numBabies = this.babies.length;
       const genderCount = {
@@ -1207,8 +1275,46 @@ export default {
 
       this.genderSeries = [genderCount.male, genderCount.female, genderCount.herm];
       this.speciesSeries = [speciesCount.bred, speciesCount.breeder, speciesCount.hybrid];
-      console.log(this.genderSeries);
-      console.log(this.speciesSeries);
+      // console.log(this.genderSeries);
+      // console.log(this.speciesSeries);
+
+      const numEggies = Object.keys(this.eggs.eggList).length;
+      const multipleTracker = {
+        unfert: 0,
+        single: 0,
+        twins: 0,
+        triplets: 0,
+        quadruplets: 0,
+        quintupletsOrMore: 0,
+      };
+
+      for (let i = 0; i < numEggies; i += 1) {
+        console.log(this.eggs.eggList[`babiesFromEgg${i}`]);
+        switch (this.eggs.eggList[`babiesFromEgg${i}`]) {
+          case 0:
+            multipleTracker.unfert += 1;
+            break;
+          case 1:
+            multipleTracker.single += 1;
+            break;
+          case 2:
+            multipleTracker.twins += 1;
+            break;
+          case 3:
+            multipleTracker.triplets += 1;
+            break;
+          case 4:
+            multipleTracker.quadruplets += 1;
+            break;
+          default:
+            multipleTracker.quintupletsOrMore += 1;
+        }
+      }
+
+      this.babiesSeries = [multipleTracker.unfert, multipleTracker.single, multipleTracker.twins,
+        multipleTracker.triplets, multipleTracker.quadruplets,
+        multipleTracker.quintupletsOrMore];
+      console.log(this.babiesSeries);
     },
 
     tryAgain() {
