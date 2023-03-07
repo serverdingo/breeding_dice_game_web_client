@@ -174,34 +174,95 @@ function calculateMods(playerOptions) {
   };
 }
 
-export { calculateMods, Roll };
+function addEggs(amount, playerOptions, currentEggCount, diceRoller) {
+  const lowFertMod = playerOptions.bred_checked.includes('bred_lowFertility') ? -1 : 0;
+  const heatMod = parseInt(playerOptions.bred_checked.includes('bred_inHeat'), 10);
 
-// const yes = calculateMods('test');
-// console.log(yes);
+  let addedEggs = (typeof amount === 'string') ? diceRoller.roll(amount).result : amount;
 
-/**
-   *def calculate_mods(event, values):
+  // TODO: change heat mod to also have the roll addition, instead of
+  //       hard coding 2d3. That way can boost w/ traits
+  addedEggs = heatMod ? (addedEggs + diceRoller.roll('2d3')) : addedEggs;
+  addedEggs += parseInt(lowFertMod, 10);
+  return currentEggCount + addedEggs;
+}
 
-    # breeder
-    if(values['knot']):
-        breeder_mod += 1
-    if(values['barbs']):
-        breeder_mod += 1
-    if(values['virility'] > 0):
-        breeder_mod += values['virility']
-    if(values['extra_fluids']):
-        breeder_mod += 1
-    if(values['extended_penetration_duration']):
-        breeder_mod += 1
-    if(values['successive_climaxes_inside_bred']):
-        breeder_mod += 1
-    if(values['virility_aids'] > 0):
-        i = 0
-        while i < values['virility_aids']:
-            breeder_mod += dice.roll('1d4')[0]
-            i += 1
-    if(values['low_sperm_count']):
-        breeder_mod -= 2
-    print(breeder_mod)
-    return {'bred_mod':bred_mod,'breeder_mod':breeder_mod}
-   */
+// TODO: set all these hard-coded values to be capable of
+//       being modified by traits
+function getNumEggs(playerOptions, playerRolls) {
+  // let eggLog = '';
+  let eggCount = 0;
+
+  const dice = new Roll();
+
+  // Initial 1d3 eggs
+  eggCount = addEggs('1d3', playerOptions, eggCount, dice);
+
+  const matchups = Object.keys(playerRolls);
+
+  let bredCritFails = 0;
+  let bredDoubleCritFails = 0;
+  let breederCrits = 0;
+  let breederDoubleCrits = 0;
+
+  for (let i = 0; i < matchups.length; i += 1) {
+    // Tally up crits for bred/breeder. Double crits count as both
+    if (playerRolls[matchups[i]].bredCrit === 'double') {
+      bredCritFails += 1;
+      bredDoubleCritFails += 1;
+    } else if (playerRolls[matchups[i]].bredCrit === 'single') {
+      bredCritFails += 1;
+    }
+
+    if (playerRolls[matchups[i]].breederCrit === 'double') {
+      breederCrits += 1;
+      breederDoubleCrits += 1;
+    } else if (playerRolls[matchups[i]].breederCrit === 'single') {
+      breederCrits += 1;
+    }
+  }
+
+  for (let i = 0; i < bredCritFails; i += 1) {
+    // Add 1d3 eggs per bred crit fail
+    eggCount = addEggs('1d3', playerOptions, eggCount, dice);
+  }
+
+  // Add 1d3 eggs for breeder's barbed cock
+  eggCount = playerOptions.breeder_checked.includes('breeder_hasBarbs')
+    ? addEggs('1d3', playerOptions, eggCount, dice) : eggCount;
+
+  // Add ovuDrugsValue-d2 eggs
+  const ovuDrugsValue = parseInt(playerOptions.bred_ovulationDrugsValue, 10);
+  eggCount = ovuDrugsValue > 0
+    ? addEggs(`${ovuDrugsValue}d2`, playerOptions, eggCount, dice)
+    : eggCount;
+
+  // Add 1d-bredOrgasms eggs
+  const bredOrgasms = parseInt(playerOptions.bred_numberOrgasmsValue, 10);
+  eggCount = bredOrgasms > 0
+    ? addEggs(`1d${bredOrgasms}`, playerOptions, eggCount, dice)
+    : eggCount;
+
+  // Add 10d3 eggs if 5 or more bred crit fail and 5 or more breeder crit
+  if (((bredCritFails + bredDoubleCritFails) >= 5)
+      && ((breederCrits + breederDoubleCrits) >= 5)) {
+    eggCount = addEggs('10d3', playerOptions, eggCount, dice);
+  }
+
+  if (bredDoubleCritFails < 5) {
+    // Add 1d4 egg for every double crit fail if there's less than 5
+    for (let i = 0; i < bredDoubleCritFails; i += 1) {
+      eggCount = addEggs('1d4', playerOptions, eggCount, dice);
+    }
+  } else {
+    // Bred double crit failed 5 (or more??) times. +4d4 and... double the eggs.
+    // DOUBLE THEM, DAMN YOU! DID I STUTTER?!
+
+    eggCount = addEggs('4d4', playerOptions, eggCount, dice);
+    eggCount *= 2;
+  }
+
+  return eggCount;
+}
+
+export { calculateMods, getNumEggs, Roll };

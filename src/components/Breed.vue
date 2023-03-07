@@ -129,7 +129,7 @@
             </b-row>
 
             <b-row>
-              <label for="bred_fertilityBonus">
+              <label for="bred_numberOrgasms">
                 Number of Orgasms: {{bred_numberOrgasmsValue}}
               </label>
               </b-row>
@@ -559,11 +559,78 @@
       \____/  \_/  \__,_|_|\__,_|\__|_|\___/|_| |_|  |_|    |_| |_|\__,_|___/\___|
   -->
   <b-collapse id="accordion-ovu" visible accordion="main-accordion" role="tabpanel">
-          <h2 class="text-center"><b-button size="lg" id="rollBreederButton"
-            variant="dark"  @click="startPhaseFinal"
-            v-b-toggle.accordion-final>
-            GO TO FINAL
-    </b-button></h2>
+      <div id="charts" class="center">
+        <!-- TODO: Add some fun egg charts~ -->
+        <!--<b-row align-h="around">
+          <b-column>
+            <apexchart type="radialBar" height="350" :options="bredChartOptions"
+            :series="bredSeries">
+            </apexchart>
+          </b-column>
+          <b-column>
+            <apexchart type="radialBar" height="350" :options="breederChartOptions"
+            :series="breederSeries">
+            </apexchart>
+          </b-column>
+        </b-row> -->
+      </div>
+        <b-row class="justify-content-md-center">
+          <b-column md="auto">
+            <h4>
+            <b-card
+              header="Egg Tally:"
+              class="text-center">
+              <b-card-body no-body class="text-center">
+                <b-row align-h="center">
+                    🥚 <h2><b class="text-danger">{{eggs.count}}</b></h2>&nbsp;eggs! 🥚
+                </b-row>
+              </b-card-body>
+            </b-card>
+          </h4>
+          </b-column>
+      </b-row>
+      <div v-if="eggs.count <= 0">
+      </div>
+      <div v-else>
+        <b-row class="justify-content-md-center text-center">
+          <!--<b-col md="auto">
+            <b-img src="https://static.f-list.net/images/eicon/wombknot2.gif"
+            style="transform: scaleX(-1);" fluid alt="Preggo R2">
+            </b-img>
+            <b-img src="https://static.f-list.net/images/eicon/wombknot1.gif"
+            style="transform: scaleX(-1);" fluid alt="Preggo R1">
+            </b-img>
+          </b-col>
+          <b-col md="auto">
+            <h1 class="text-danger" align-self="center"><br/>Impregnation Successful</h1>
+          </b-col>
+          <b-col md="auto">
+            <b-img src="https://static.f-list.net/images/eicon/wombknot1.gif" fluid alt="Preggo R1">
+            </b-img>
+            <b-img src="https://static.f-list.net/images/eicon/wombknot2.gif" fluid alt="Preggo R2">
+            </b-img>
+          </b-col>-->
+        </b-row>
+        <br/>
+        <b-row class="justify-content-md-center">
+            <b-col col lg="2" class="text-right">
+              <b-icon id="fert-help-button"
+              icon="question-circle-fill" aria-label="Help"></b-icon>
+              <b-tooltip target="fert-help-button" triggers="hover">
+                Got the eggs, time to add the gravy~</b-tooltip>
+            </b-col>
+            <b-col cols="12" md="auto">
+              <h2>
+                <b-button size="lg" id="startFinalPhaseButton"
+                      variant="dark"  @click="startFinalPhase"
+                      class="text-center" v-b-toggle.accordion-final>
+                      Fertilize
+                </b-button>
+              </h2>
+            </b-col>
+            <b-col col lg="2"></b-col>
+        </b-row>
+    </div>
   </b-collapse>
   <!--
     ______ _             _   _____  _
@@ -592,7 +659,7 @@
           <b-icon icon="github"></b-icon>
         </b-col>
         <b-col md="auto">
-          serverdingo
+          <a href="https://github.com/serverdingo/breeding_dice_game_web_client">serverdingo</a>
         </b-col>
       </b-row>
     </b-card>
@@ -601,7 +668,7 @@
 </template>
 <script>
 // import axios from 'axios';
-import { calculateMods } from '../breed';
+import { calculateMods, getNumEggs } from '../breed';
 
 export default {
   name: 'Breed',
@@ -683,6 +750,10 @@ export default {
         },
       },
       overallWinner: '',
+
+      eggs: {
+        count: 0,
+      },
 
       bredSeries: [-53],
       breederSeries: [93],
@@ -975,6 +1046,11 @@ export default {
         this.overallWinner = 'tie';
       }
     },
+
+    startPhaseOvu() {
+      this.eggs.count = getNumEggs(this.playerOptions, this.playerRolls);
+    },
+
     tryAgain() {
       window.location.reload(); // TODO: Reload page with saved settings, or do a 'soft reload'
     },
