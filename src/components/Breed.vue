@@ -559,7 +559,7 @@
       \____/  \_/  \__,_|_|\__,_|\__|_|\___/|_| |_|  |_|    |_| |_|\__,_|___/\___|
   -->
   <b-collapse id="accordion-ovu" visible accordion="main-accordion" role="tabpanel">
-      <div id="charts" class="center">
+      <div id="ovu-charts" class="center">
         <!-- TODO: Add some fun egg charts~ -->
         <!--<b-row align-h="around">
           <b-column>
@@ -641,6 +641,59 @@
    |_|    |_|_| |_|\__,_|_| |_|    |_| |_|\__,_|___/\___|
   -->
   <b-collapse id="accordion-final" visible accordion="main-accordion" role="tabpanel">
+    <div id="fert-charts" class="center">
+      <!-- TODO: Add some fun egg charts~ -->
+      <b-row align-h="around">
+        <b-column>
+          <!--<apexchart type="donut" :options="babiesChartOptions" :series="babiesSeries">
+          </apexchart>-->
+        </b-column>
+        <b-column>
+          <apexchart type="donut" height="350"
+          :options="genderChartOptions" :series="genderSeries">
+          </apexchart>
+        </b-column>
+        <b-column>
+          <apexchart type="donut" height="350"
+          :options="speciesChartOptions" :series="speciesSeries">
+          </apexchart>
+        </b-column>
+      </b-row>
+    </div>
+      <b-row class="justify-content-md-center">
+        <b-column md="auto">
+          <h4>
+          <b-card
+            header="Babies:"
+            class="text-center">
+            <b-card-body no-body class="text-center">
+              <b-row align-h="center">
+                  You made <h2><b class="text-danger">{{babies.length}}</b></h2> babies from
+                  <h2><b class="text-primary">{{eggs.count}}</b></h2> eggs!
+              </b-row>
+            </b-card-body>
+          </b-card>
+        </h4>
+      </b-column>
+    </b-row>
+    <div>
+      <b-row class="justify-content-md-center">
+        <b-col col lg="2" class="text-right">
+        </b-col>
+        <b-col cols="12" md="auto">
+          <b-row class="justify-content-md-center">
+            <h2 class="text-center">
+              <b-button size="lg" id="goAgainButton"
+                    variant="dark"  @click="tryAgain">
+                    Go again?
+              </b-button>
+            </h2>
+          </b-row>
+        </b-col>
+        <b-col col lg="2">
+        </b-col>
+      </b-row>
+    </div>
   </b-collapse>
   <br/>
   <br/>
@@ -668,7 +721,7 @@
 </template>
 <script>
 // import axios from 'axios';
-import { calculateMods, getNumEggs } from '../breed';
+import { calculateMods, getNumEggs, getBabies } from '../breed';
 
 export default {
   name: 'Breed',
@@ -681,6 +734,8 @@ export default {
       playerOptions: [],
 
       mods: {},
+
+      babies: {},
 
       playerRolls: {
         diceRoll1: {
@@ -797,6 +852,69 @@ export default {
         { text: 'Overflowing', value: 'overflowing' },
       ],
 
+      babiesSeries: [],
+      babiesChartOptions: {
+        chart: {
+          height: 350,
+          type: 'donut',
+          offsetY: -10,
+        },
+        labels: ['Singles', 'Twins', 'Triplets', 'Quadruplets', 'Quintuplets+'],
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: 'bottom',
+            },
+          },
+        }],
+      },
+
+      genderSeries: [],
+      genderChartOptions: {
+        chart: {
+          height: 350,
+          type: 'donut',
+          offsetY: -10,
+        },
+        labels: ['Males', 'Females', 'Herms'],
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: 'bottom',
+            },
+          },
+        }],
+      },
+
+      speciesSeries: [],
+      speciesChartOptions: {
+        chart: {
+          height: 350,
+          type: 'donut',
+          offsetY: -10,
+        },
+        labels: ['Bred\'s species', 'Breeder\'s species', 'Hybrid'],
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: 'bottom',
+            },
+          },
+        }],
+      },
+
       bredChartOptions: {
         chart: {
           height: 350,
@@ -806,8 +924,8 @@ export default {
         colors: ['#4e0d8c'],
         plotOptions: {
           radialBar: {
-            startAngle: -135,
-            endAngle: 135,
+            startAngle: -125,
+            endAngle: 125,
             dataLabels: {
               name: {
                 fontSize: '16px',
@@ -864,8 +982,8 @@ export default {
         colors: ['#000000'],
         plotOptions: {
           radialBar: {
-            startAngle: -135,
-            endAngle: 135,
+            startAngle: -125,
+            endAngle: 125,
             background: '#333',
             dataLabels: {
               name: {
@@ -1049,6 +1167,48 @@ export default {
 
     startPhaseOvu() {
       this.eggs.count = getNumEggs(this.playerOptions, this.playerRolls);
+    },
+
+    startFinalPhase() {
+      // I'm pretty sure this variable name has put me on some kind of watch list
+      const eggsAndBabies = getBabies(this.playerOptions, this.playerRolls, this.eggs);
+      console.log(eggsAndBabies);
+      this.eggs = eggsAndBabies.updatedEggs;
+      this.babies = eggsAndBabies.babiesList;
+
+      const numBabies = this.babies.length;
+      const genderCount = {
+        male: 0,
+        female: 0,
+        herm: 0,
+      };
+      const speciesCount = {
+        bred: 0,
+        breeder: 0,
+        hybrid: 0,
+      };
+      for (let i = 0; i < numBabies; i += 1) {
+        if (this.babies[i].gender === 1) {
+          genderCount.male += 1;
+        } else if (this.babies[i].gender === 2) {
+          genderCount.female += 1;
+        } else {
+          genderCount.herm += 1;
+        }
+
+        if (this.babies[i].species === 1) {
+          speciesCount.bred += 1;
+        } else if (this.babies[i].gender === 2) {
+          speciesCount.breeder += 1;
+        } else {
+          speciesCount.hybrid += 1;
+        }
+      }
+
+      this.genderSeries = [genderCount.male, genderCount.female, genderCount.herm];
+      this.speciesSeries = [speciesCount.bred, speciesCount.breeder, speciesCount.hybrid];
+      console.log(this.genderSeries);
+      console.log(this.speciesSeries);
     },
 
     tryAgain() {

@@ -182,7 +182,7 @@ function addEggs(amount, playerOptions, currentEggCount, diceRoller) {
 
   // TODO: change heat mod to also have the roll addition, instead of
   //       hard coding 2d3. That way can boost w/ traits
-  addedEggs = heatMod ? (addedEggs + diceRoller.roll('2d3')) : addedEggs;
+  addedEggs = heatMod ? (addedEggs + diceRoller.roll('2d3').result) : addedEggs;
   addedEggs += parseInt(lowFertMod, 10);
   return currentEggCount + addedEggs;
 }
@@ -265,4 +265,128 @@ function getNumEggs(playerOptions, playerRolls) {
   return eggCount;
 }
 
-export { calculateMods, getNumEggs, Roll };
+function fertEgg(diceRoller, fertMod, babiesToAdd) {
+  const naturalRoll = diceRoller.roll('1d100').result;
+  let babiesToAddCopy = babiesToAdd;
+  if (naturalRoll + fertMod >= 0) {
+    // If we get a positive value for roll + fertMod, thassa babby!
+    babiesToAddCopy.push({
+      gender: diceRoller.roll('1d3').result,
+      species: diceRoller.roll('1d3').result,
+      natRoll: naturalRoll,
+    });
+  }
+
+  if ((naturalRoll >= 90) && (naturalRoll < 100)) {
+    // Natural roll of 90+ - chance for extra baby!
+
+    babiesToAddCopy = fertEgg(diceRoller, fertMod, babiesToAddCopy);
+  } else if (naturalRoll > 100) {
+    // Naturall roll of 100 - extra baby guaranteed, and try for another!
+    babiesToAddCopy.push({
+      gender: diceRoller.roll('1d3').result,
+      species: diceRoller.roll('1d3').result,
+      natRoll: naturalRoll,
+    });
+    babiesToAddCopy = fertEgg(diceRoller, fertMod, babiesToAddCopy);
+  }
+  return babiesToAddCopy;
+}
+
+function getBabies(playerOptions, playerRolls, eggs) {
+  // Base fert mod is -90, leaving 10% fert chance
+  let fertMod = -90;
+
+  const prevImpreg = parseInt(playerOptions.bred_previousImpregnationsValue, 10);
+
+  // I think this may be wrong... my old code references prevImpreg
+  // but I wrote "roll win beyond second for the stud" in the logs.
+  if (prevImpreg >= 3) {
+    fertMod += (prevImpreg - 2) * 3;
+  } else {
+    fertMod -= (3 - prevImpreg) * 3;
+  }
+
+  // +10 for knot
+  fertMod = playerOptions.breeder_checked.includes('breeder_hasKnot')
+    ? (fertMod + 10) : fertMod;
+
+  // +10 for barbs
+  fertMod = playerOptions.breeder_checked.includes('breeder_hasBarbs')
+    ? (fertMod + 10) : fertMod;
+
+  // +10 for flooded ovaries or cervical pen
+  const penDepth = playerOptions.bred_penetrationDepthSelected;
+  fertMod = (penDepth !== 'normal') ? (fertMod + 10) : fertMod;
+
+  // +10 for every bred/breeder orgasm beyond first
+  const bredOrgasms = parseInt(playerOptions.bred_numberOrgasmsValue, 10);
+  const breederOrgasms = parseInt(playerOptions.breeder_numberOrgasmsValue, 10);
+
+  fertMod = (bredOrgasms > 1) ? (fertMod + (10 * (bredOrgasms - 1)))
+    : fertMod;
+  fertMod = (breederOrgasms > 1) ? (fertMod + (10 * (breederOrgasms - 1)))
+    : fertMod;
+
+  // +5/10/15 for paunch/preg/overflow cumflation respectively
+  const cumflation = playerOptions.breeder_cumflationSelected;
+  if (cumflation !== 'none') {
+    if (cumflation === 'paunch') {
+      fertMod += 5;
+    } else {
+      fertMod = (cumflation === 'pregnantLike') ? (fertMod + 10)
+        : (fertMod + 15);
+    }
+  }
+
+  // +5/10 for dripping/constant stream wetness respectively
+  const wetness = playerOptions.bred_wetnessSelected;
+  if (wetness !== 'none') {
+    fertMod = (wetness === 'dripping') ? (fertMod + 5)
+      : (fertMod + 10);
+  }
+
+  // -10 if different species, +10 if same
+  fertMod = playerOptions.bred_checked.includes('bred_differentSpecies')
+    ? (fertMod - 10) : (fertMod + 10);
+
+  // -10 for every undefeated contraceptive
+  const undefContra = parseInt(playerOptions.breeder_undefeatedContraceptivesValue, 10);
+  fertMod = undefContra > 0 ? (fertMod - (10 * undefContra)) : fertMod;
+
+  // -1 for every defeated contraceptive
+  const defContra = parseInt(playerOptions.breeder_defeatedContraceptivesValue, 10);
+  fertMod = defContra > 0 ? (fertMod - (1 * defContra)) : fertMod;
+
+  // +10 for every extra fert level
+  const extraFert = parseInt(playerOptions.bred_fertilityBonusValue, 10);
+  fertMod = (extraFert > 0) ? (fertMod + (10 * extraFert)) : fertMod;
+
+  // -10 for low fert
+  fertMod = playerOptions.bred_checked.includes('bred_lowFertility')
+    ? (fertMod - 10) : fertMod;
+
+  const babies = [];
+  const dice = new Roll();
+
+  const eggsCopy = eggs;
+  eggsCopy.eggList = {};
+  // ok... it's time for the big chungus loop
+  for (let i = 0; i < eggs.count; i += 1) {
+    let babiesToAdd = [];
+    let numBabiesAdded = 0;
+
+    babiesToAdd = fertEgg(dice, fertMod, babiesToAdd);
+
+    numBabiesAdded = babiesToAdd.length;
+    eggsCopy.eggList[`babiesFromEgg${i}`] = numBabiesAdded;
+
+    babies.push(...babiesToAdd);
+  }
+
+  return { updatedEggs: eggsCopy, babiesList: babies };
+}
+
+export {
+  calculateMods, getNumEggs, getBabies, Roll,
+};
