@@ -548,8 +548,12 @@
       </b-card>
       <b-card no-body class="mb-1" id="traitcard">
         <b-card-header header-tag="header" class="p-1" role="tab">
-          <b-button disabled block v-b-tooltip.html title="Coming soon™!" variant="info"
+          <b-button disabled block variant="info"
           v-b-toggle.accordion-3 id="traitbutton">Choose Traits</b-button>
+          <b-tooltip target="traitcard"
+                triggers="hover">
+                Coming soon™!
+          </b-tooltip>
         </b-card-header>
         <!-- TODO: add traits functionality -->
         <!--<b-collapse id="accordion-3" accordion="my-accordion"
