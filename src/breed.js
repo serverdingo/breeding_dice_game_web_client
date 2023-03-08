@@ -6,67 +6,6 @@
 *    3. Ovulation Check      -       return back egg count
 *    4. Babby making         -       return back babies made, twin/triplet/etc stats, impreg chance
 *
-* All the steps need the breeder's and bred's variables...
-*
-*
-*     bred_dice.diceRoll1 etc
-*
-
-id="bred_inHeat"
-id="bred_desireForImpreg"
-id="bred_arousedBeforeSex"
-id="bred_lowFertility"
-id="bred_differentSpecies"
-
-*     bred_checked: [],
-*     bred_fertilityBonusValue: '0',
-*     bred_fertilityAidsValue: '0',
-*     bred_ovulationDrugsValue: '0',
-*     bred_previousImpregnationsValue: '0',
-*     bred_numberOrgasmsValue: '0',
-*     bred_positionSelected: 'other',
-*     bred_positionOptions: [
-*       { text: 'Doggy Style', value: 'doggyStyle' },
-*       { text: 'Mating Press', value: 'matingPress' },
-*       { text: 'Other', value: 'other' },
-*     ],
-*     bred_penetrationDepthSelected: 'normal',
-*     bred_penetrationDepthOptions: [
-*       { text: 'Normal', value: 'normal' },
-*       { text: 'Flooded Overies', value: 'floodedOvaries' },
-*       { text: 'Cervical Penetration', value: 'cervicalPen' },
-*     ],
-*     bred_wetnessSelected: 'none',             <-- No effect on breeder mod
-*     bred_wetnessOptions: [
-*       { text: 'None/Lube Needed', value: 'none' },
-*       { text: 'Dripping', value: 'dripping' },
-*       { text: 'Constant Stream', value: 'constantStream' },
-*     ],
-*
-*     breeder_dice.diceRoll1 etc
-*
-
-id="breeder_hasKnot"
-id="breeder_hasBarbs"
-id="breeder_inRut"
-id="breeder_cameMoreThanOnce"
-id="breeder_extraFluids"
-id="breeder_extendedPenetration"
-id="breeder_lowSpermCount"
-
-*     breeder_checked: [],
-*     breeder_virilityBonusValue: '0',
-*     breeder_virilityAidsValue: '0',
-*     breeder_numberOrgasmsValue: '0',              <-- No effect on breeder mod
-*     breeder_defeatedContraceptivesValue: '0',     <-- No effect on breeder mod
-*     breeder_undefeatedContraceptivesValue: '0',   <-- No effect on breeder mod
-*     breeder_cumflationSelected: 'none',           <-- No effect on breeder mod
-*     breeder_cumflationOptions: [                  <-- No effect on breeder mod
-*       { text: 'None', value: 'none' },
-*       { text: 'Paunch', value: 'paunch' },
-*       { text: 'Pregnant-like', value: 'pregnantLike' },
-*       { text: 'Overflowing', value: 'overflowing' },
-*     ]
 */
 
 // TODO: Something smart would be to put the variables in a massive dict,
@@ -84,14 +23,14 @@ function calculateMods(playerOptions) {
   let bredMod = 0;
   let breederMod = 0;
 
-  if (playerOptions.bred_checked.includes('bred_inHeat')) {
-    if (playerOptions.breeder_checked.includes('breeder_inRut')) {
+  if (playerOptions.bred_checked.includes('inHeat')) {
+    if (playerOptions.breeder_checked.includes('inRut')) {
       bredMod -= dice.roll('2d2').result;
       breederMod += dice.roll('2d2').result;
     } else {
       bredMod -= 2;
     }
-  } else if (playerOptions.breeder_checked.includes('breeder_inRut')) {
+  } else if (playerOptions.breeder_checked.includes('inRut')) {
     breederMod += 2;
   }
 
@@ -120,41 +59,41 @@ function calculateMods(playerOptions) {
     bredMod -= 2;
   }
 
-  if (playerOptions.bred_checked.includes('bred_desireForImpreg')) {
+  if (playerOptions.bred_checked.includes('desireForImpreg')) {
     bredMod -= 1;
   }
 
-  if (playerOptions.bred_checked.includes('bred_arousedBeforeSex')) {
+  if (playerOptions.bred_checked.includes('arousedBeforeSex')) {
     bredMod -= 1;
   }
 
-  if (playerOptions.bred_checked.includes('bred_differentSpecies')) {
+  if (playerOptions.bred_checked.includes('differentSpecies')) {
     bredMod += 1;
   }
 
-  if (playerOptions.bred_checked.includes('bred_lowFertility')) {
+  if (playerOptions.bred_checked.includes('lowFertility')) {
     bredMod += 2;
   }
 
   // Breeder mods
 
-  if (playerOptions.breeder_checked.includes('breeder_hasKnot')) {
+  if (playerOptions.breeder_checked.includes('hasKnot')) {
     breederMod += 1;
   }
 
-  if (playerOptions.breeder_checked.includes('breeder_hasBarbs')) {
+  if (playerOptions.breeder_checked.includes('hasBarbs')) {
     breederMod += 1;
   }
 
-  if (playerOptions.breeder_checked.includes('breeder_extendedPenetration')) {
+  if (playerOptions.breeder_checked.includes('extendedPenetration')) {
     breederMod += 1;
   }
 
-  if (playerOptions.breeder_checked.includes('breeder_cameMoreThanOnce')) {
+  if (playerOptions.breeder_checked.includes('cameMoreThanOnce')) {
     breederMod += 1;
   }
 
-  if (playerOptions.breeder_checked.includes('breeder_extraFluids')) {
+  if (playerOptions.breeder_checked.includes('extraFluids')) {
     breederMod += 1;
   }
 
@@ -164,7 +103,7 @@ function calculateMods(playerOptions) {
     breederMod += dice.roll('1d4').result;
   }
 
-  if (playerOptions.breeder_checked.includes('breeder_lowSpermCount')) {
+  if (playerOptions.breeder_checked.includes('lowSpermCount')) {
     breederMod -= 1;
   }
   console.log(bredMod);
@@ -175,8 +114,8 @@ function calculateMods(playerOptions) {
 }
 
 function addEggs(amount, playerOptions, currentEggCount, diceRoller) {
-  const lowFertMod = playerOptions.bred_checked.includes('bred_lowFertility') ? -1 : 0;
-  const heatMod = parseInt(playerOptions.bred_checked.includes('bred_inHeat'), 10);
+  const lowFertMod = playerOptions.bred_checked.includes('lowFertility') ? -1 : 0;
+  const heatMod = parseInt(playerOptions.bred_checked.includes('inHeat'), 10);
 
   let addedEggs = (typeof amount === 'string') ? diceRoller.roll(amount).result : amount;
 
@@ -228,7 +167,7 @@ function getNumEggs(playerOptions, playerRolls) {
   }
 
   // Add 1d3 eggs for breeder's barbed cock
-  eggCount = playerOptions.breeder_checked.includes('breeder_hasBarbs')
+  eggCount = playerOptions.breeder_checked.includes('hasBarbs')
     ? addEggs('1d3', playerOptions, eggCount, dice) : eggCount;
 
   // Add ovuDrugsValue-d2 eggs
@@ -308,11 +247,11 @@ function getBabies(playerOptions, playerRolls, eggs) {
   }
 
   // +10 for knot
-  fertMod = playerOptions.breeder_checked.includes('breeder_hasKnot')
+  fertMod = playerOptions.breeder_checked.includes('hasKnot')
     ? (fertMod + 10) : fertMod;
 
   // +10 for barbs
-  fertMod = playerOptions.breeder_checked.includes('breeder_hasBarbs')
+  fertMod = playerOptions.breeder_checked.includes('hasBarbs')
     ? (fertMod + 10) : fertMod;
 
   // +10 for flooded ovaries or cervical pen
@@ -347,7 +286,7 @@ function getBabies(playerOptions, playerRolls, eggs) {
   }
 
   // -10 if different species, +10 if same
-  fertMod = playerOptions.bred_checked.includes('bred_differentSpecies')
+  fertMod = playerOptions.bred_checked.includes('differentSpecies')
     ? (fertMod - 10) : (fertMod + 10);
 
   // -10 for every undefeated contraceptive
@@ -363,7 +302,7 @@ function getBabies(playerOptions, playerRolls, eggs) {
   fertMod = (extraFert > 0) ? (fertMod + (10 * extraFert)) : fertMod;
 
   // -10 for low fert
-  fertMod = playerOptions.bred_checked.includes('bred_lowFertility')
+  fertMod = playerOptions.bred_checked.includes('lowFertility')
     ? (fertMod - 10) : fertMod;
 
   const babies = [];
@@ -372,6 +311,7 @@ function getBabies(playerOptions, playerRolls, eggs) {
   const eggsCopy = eggs;
   eggsCopy.eggList = {};
   // ok... it's time for the big chungus loop
+  // this is easily the most computation-heavy bit if many eggs
   for (let i = 0; i < eggs.count; i += 1) {
     let babiesToAdd = [];
     let numBabiesAdded = 0;

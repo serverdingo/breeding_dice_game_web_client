@@ -15,95 +15,25 @@
           <b-row>
             <b-col>
           <b-card-body>
-            <b-row>
+            <b-row v-for="checkbox in playerOptionsNewToBeRenamed.bred.checkboxes.formInfo"
+              :key="checkbox">
               <b-col md="auto">
-                <b-icon id="help-button-bred_inHeat" icon="question-circle-fill"
+                <b-icon :id="`help-button-${checkbox.id}`" icon="question-circle-fill"
                 aria-label="Help" font-scale=".8">
                 </b-icon>
-                <b-tooltip target="help-button-bred_inHeat" triggers="hover">
-                  Big boost to eggs ovulated and fertility.
+                <b-tooltip :target="`help-button-${checkbox.id}`" triggers="hover">
+                  {{checkbox.helpText}}
                 </b-tooltip>
               </b-col>
               <b-col md="auto">
-                <input type="checkbox" id="bred_inHeat" value="bred_inHeat" v-model="bred_checked">
+                <input type="checkbox" :id="checkbox.id" :value="checkbox.id"
+                v-model="playerOptionsNewToBeRenamed.bred.checkboxes.checked">
               </b-col>
               <b-col md="auto">
-                <label for="bred_inHeat">In Heat</label>
-              </b-col>
-            </b-row>
-
-            <b-row>
-              <b-col md="auto">
-                <b-icon id="help-button-bred_desireForImpreg" icon="question-circle-fill"
-                aria-label="Help" font-scale=".8">
-                </b-icon>
-                <b-tooltip target="help-button-bred_desireForImpreg" triggers="hover">
-                  Boosts fertility. They know what they want. Now give it to them.
-                </b-tooltip>
-              </b-col>
-              <b-col md="auto">
-              <input type="checkbox" id="bred_desireForImpreg" value="bred_desireForImpreg"
-                v-model="bred_checked">
-              </b-col>
-              <b-col md="auto">
-                <label for="bred_desireForImpreg">Strong Desire for Impregnation</label>
-              </b-col>
-            </b-row>
-
-            <b-row>
-              <b-col md="auto">
-                <b-icon id="help-button-bred_arousedBeforeSex" icon="question-circle-fill"
-                aria-label="Help" font-scale=".8">
-                </b-icon>
-                <b-tooltip target="help-button-bred_arousedBeforeSex" triggers="hover">
-                  They don't need any convincing. They're already yours...
-                  Lowers bred's chance to resist impregnation.
-                </b-tooltip>
-              </b-col>
-              <b-col md="auto">
-                <input type="checkbox" id="bred_arousedBeforeSex" value="bred_arousedBeforeSex"
-                v-model="bred_checked">
-              </b-col>
-              <b-col md="auto">
-                <label for="bred_arousedBeforeSex">Aroused Before Sex</label>
-              </b-col>
-            </b-row>
-
-            <b-row>
-              <b-col md="auto">
-                <b-icon id="help-button-bred_lowFertility" icon="question-circle-fill"
-                aria-label="Help" font-scale=".8">
-                </b-icon>
-                <b-tooltip target="help-button-bred_lowFertility" triggers="hover">
-                  Naturally barren? Cursed? Whatever the reason, this oven has some issues.
-                  Hopefully you can fix that.~
-                </b-tooltip>
-              </b-col>
-              <b-col md="auto">
-                <input type="checkbox" id="bred_lowFertility" value="bred_lowFertility"
-                v-model="bred_checked">
-              </b-col>
-              <b-col md="auto">
-                <label class="text-danger" for="bred_lowFertility">Low Innate Fertility</label>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="auto">
-                <b-icon id="help-button-bred_differentSpecies" icon="question-circle-fill"
-                aria-label="Help" font-scale=".8">
-                </b-icon>
-                <b-tooltip target="help-button-bred_differentSpecies" triggers="hover">
-                  Differing genetics makes it a bit more difficult to conceive...
-                  (Note: Play however you want, but I'd suggest keeping it "high-level" like
-                  "canines" vs. "wolf/dingo" etc.)
-                </b-tooltip>
-              </b-col>
-              <b-col md="auto">
-                <input type="checkbox" id="bred_differentSpecies" value="bred_differentSpecies"
-                v-model="bred_checked">
-              </b-col>
-              <b-col md="auto">
-                <label class="text-danger" for="bred_differentSpecies">Different Species</label>
+                <label v-if="!checkbox.bad" :for="checkbox.id">{{checkbox.label}}</label>
+                <label v-else class="text-danger" :for="checkbox.id">
+                  {{checkbox.label}}
+                </label>
               </b-col>
             </b-row>
             <b-row>
@@ -136,6 +66,8 @@
                 trip to those egg factories.
               </b-tooltip>
             </b-col>
+          </b-row>
+            <b-col md="auto">
             <b-form-group label="Penetration Depth" v-slot="{ ariaDescribedby }">
               <b-form-radio-group
                   id="bred_penetrationDepth"
@@ -145,7 +77,7 @@
                   name="bred_penetrationDepth"
                 ></b-form-radio-group>
             </b-form-group>
-          </b-row>
+          </b-col>
           <b-row>
             <b-col md="auto">
               <b-icon id="help-button-bred_wetness" icon="question-circle-fill"
@@ -279,132 +211,24 @@
           <b-row>
             <b-col>
           <b-card-body>
-            <b-row>
+              <b-row v-for="checkbox in playerOptionsNewToBeRenamed.breeder.checkboxes.formInfo"
+              :key="checkbox">
               <b-col md="auto">
-                <b-icon id="help-button-breeder_hasKnot" icon="question-circle-fill"
+                <b-icon :id="`help-button-${checkbox.id}`" icon="question-circle-fill"
                 aria-label="Help" font-scale=".8">
                 </b-icon>
-                <b-tooltip target="help-button-breeder_hasKnot" triggers="hover">
-                  A nice plump bulb at the end of the shaft to keep that seed locked
-                  firmly in place. Need I say more?
+                <b-tooltip :target="`help-button-${checkbox.id}`" triggers="hover">
+                  {{checkbox.helpText}}
                 </b-tooltip>
               </b-col>
               <b-col md="auto">
-                <input type="checkbox" id="breeder_hasKnot"
-                value="breeder_hasKnot" v-model="breeder_checked">
+                <input type="checkbox" :id="checkbox.id" :value="checkbox.id"
+                v-model="playerOptionsNewToBeRenamed.breeder.checkboxes.checked">
               </b-col>
               <b-col md="auto">
-                <label for="breeder_hasKnot">Has Knot</label>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="auto">
-                <b-icon id="help-button-breeder_hasBarbs" icon="question-circle-fill"
-                aria-label="Help" font-scale=".8">
-                </b-icon>
-                <b-tooltip target="help-button-breeder_hasBarbs" triggers="hover">
-                  Each rake of those spines along the tight walls of the one being bred
-                  sends signals to the ovaries that a true stud is about to deliver their
-                  payload.
-                </b-tooltip>
-              </b-col>
-              <b-col md="auto">
-                <input type="checkbox" id="breeder_hasBarbs"
-                value="breeder_hasBarbs" v-model="breeder_checked">
-              </b-col>
-              <b-col md="auto">
-                <label for="breeder_hasBarbs">Has Barbs/Penile Spines</label>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="auto">
-                <b-icon id="help-button-breeder_inRut" icon="question-circle-fill"
-                aria-label="Help" font-scale=".8">
-                </b-icon>
-                <b-tooltip target="help-button-breeder_inRut" triggers="hover">
-                  A special time in which the breeder's virility and almost primal drive to
-                  breed is drastically increased. Watch out: it's mating season...
-                </b-tooltip>
-              </b-col>
-              <b-col md="auto">
-                <input type="checkbox" id="breeder_inRut"
-                value="breeder_inRut" v-model="breeder_checked">
-              </b-col>
-              <b-col md="auto">
-                <label for="breeder_inRut">In Rut</label>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="auto">
-                <b-icon id="help-button-breeder_cameMoreThanOnce" icon="question-circle-fill"
-                aria-label="Help" font-scale=".8">
-                </b-icon>
-                <b-tooltip target="help-button-breeder_cameMoreThanOnce" triggers="hover">
-                  "You think you're good and bred, huh? Let's go again.
-                  Y'know... Just to be sure.~"
-                </b-tooltip>
-              </b-col>
-              <b-col md="auto">
-                <input type="checkbox" id="breeder_cameMoreThanOnce"
-                value="breeder_cameMoreThanOnce" v-model="breeder_checked">
-              </b-col>
-              <b-col md="auto">
-                <label for="breeder_cameMoreThanOnce">Came > 1 time in who was bred</label>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="auto">
-                <b-icon id="help-button-breeder_extraFluids" icon="question-circle-fill"
-                aria-label="Help" font-scale=".8">
-                </b-icon>
-                <b-tooltip target="help-button-breeder_extraFluids" triggers="hover">
-                  All that slick belching from the tip of that spire really helps for
-                  making sure the breeder can get themselves as far in as they can possibly get.
-                </b-tooltip>
-              </b-col>
-              <b-col md="auto">
-                <input type="checkbox" id="breeder_extraFluids"
-                  value="breeder_extraFluids" v-model="breeder_checked">
-              </b-col>
-              <b-col md="auto">
-                <label for="breeder_extraFluids">Extra Fluids</label>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="auto">
-                <b-icon id="help-button-breeder_extendedPenetration" icon="question-circle-fill"
-                aria-label="Help" font-scale=".8">
-                </b-icon>
-                <b-tooltip target="help-button-breeder_extendedPenetration" triggers="hover">
-                  "Woah woah woah, where you going? I tied, we ain't going anywhere. Guess
-                  we have no choice but to let that baby gravy brew and churn in that womb of
-                  yours.~"
-                </b-tooltip>
-              </b-col>
-              <b-col md="auto">
-                <input type="checkbox" id="breeder_extendedPenetration"
-                value="breeder_extendedPenetration" v-model="breeder_checked">
-              </b-col>
-              <b-col md="auto">
-                <label for="breeder_extendedPenetration">Extended Penetration Duration</label>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col md="auto">
-                <b-icon id="help-button-breeder_lowSpermCount" icon="question-circle-fill"
-                aria-label="Help" font-scale=".8">
-                </b-icon>
-                <b-tooltip target="help-button-breeder_lowSpermCount" triggers="hover">
-                  Not quite shooting blanks, but the breeder has quite a few less tadpoles
-                  in each load than the average stud.
-                </b-tooltip>
-              </b-col>
-              <b-col md="auto">
-                <input type="checkbox" id="breeder_lowSpermCount"
-                value="breeder_lowSpermCount" v-model="breeder_checked">
-              </b-col>
-              <b-col md="auto">
-                <label class="text-danger" for="breeder_lowSpermCount">Low Natural Sperm Count
+                <label v-if="!checkbox.bad" :for="checkbox.id">{{checkbox.label}}</label>
+                <label v-else class="text-danger" :for="checkbox.id">
+                  {{checkbox.label}}
                 </label>
               </b-col>
             </b-row>
@@ -550,14 +374,10 @@
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button disabled block variant="info"
           v-b-toggle.accordion-3 id="traitbutton">Choose Traits</b-button>
-          <b-tooltip target="traitcard"
-                triggers="hover">
-                Coming soon™!
-          </b-tooltip>
         </b-card-header>
         <!-- TODO: add traits functionality -->
-        <!--<b-collapse id="accordion-3" accordion="my-accordion"
-        v-b-tooltip.html title="test" role="tabpanel">
+        <b-collapse id="accordion-3" accordion="my-accordion"
+        v-b-tooltip.html role="tabpanel">
       <div class="column" border-variant="danger">
         <b-card-group deck>
           <b-card
@@ -565,20 +385,52 @@
           header="Bred Traits"
           header-bg-variant="primary"
           header-text-variant="white"
-          align="center"
-        >
+          align="center">
+            <b-row v-for="trait in traits.bredTraits" :key="trait">
+              <b-col md="auto">
+                <b-icon :id="`help-button-${trait.traitId}`" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip :target="`help-button-${trait.traitId}`" triggers="hover">
+                  {{trait.description}}
+                </b-tooltip>
+              </b-col>
+              <b-col md="auto">
+                <input type="checkbox" :id="trait.traitId"
+                :value="trait.traitId" v-model="playerOptionsNewToBeRenamed.selectedTraits.bred">
+              </b-col>
+              <b-col md="auto">
+                <label :for="trait.traitId">{{trait.name}}</label>
+              </b-col>
+            </b-row>
           </b-card>
           <b-card
           border-variant="danger"
           header="Breeder Traits"
           header-bg-variant="danger"
           header-text-variant="white"
-          align="center"
-        >
+          align="center">
+            <b-row v-for="trait in traits.breederTraits" :key="trait">
+              <b-col md="auto">
+                <b-icon :id="`help-button-${trait.traitId}`" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip :target="`help-button-${trait.traitId}`" triggers="hover">
+                  {{trait.description}}
+                </b-tooltip>
+              </b-col>
+              <b-col md="auto">
+                <input type="checkbox" :id="trait.traitId"
+                :value="trait.traitId" v-model="playerOptionsNewToBeRenamed.selectedTraits.breeder">
+              </b-col>
+              <b-col md="auto">
+                <label :for="trait.traitId">{{trait.name}}</label>
+              </b-col>
+            </b-row>
           </b-card>
         </b-card-group>
       </div>
-        </b-collapse>-->
+        </b-collapse>
       </b-card>
     </div><br>
 
@@ -1057,6 +909,231 @@ export default {
   },
   data() {
     return {
+      traits: {
+        bredTraits: [
+          {
+            name: 'Natural Born Milf',
+            traitId: 'natBornMilf',
+            description: 'During initial pregnancy check, crit fails are counted as 2\'s or '
+            + 'lower (instead of 1\'s), and for ovulation check count crit fails as adding 2d3 eggs instead of 1d3',
+          },
+          {
+            name: 'Clueless Breeder',
+            traitId: 'cluelessBreeder',
+            description: 'During Initial pregnancy check, add a +1 modifier to the '
+            + 'breeder\'s rolls and a -1 modifier to the bred\'s rolls',
+          },
+          {
+            name: 'Corrupted Womb',
+            traitId: 'corruptedWomb',
+            description: 'During Initial pregnancy check, ignore modifier\'s for different'
+            + ' species for both bred and breeder. Also, bred must re-roll any modified results over 1 during '
+            + 'initial pregnancy check',
+          },
+          {
+            name: 'Corrupted Ovaries',
+            traitId: 'corruptedOvaries',
+            description: 'During initial pregnancy check, adds +2 to breeder\'s rolls. Every '
+            + 'crit from your opponent adds an extra side of die to the ovulation check (IE 3'
+            + ' crits is d6, 5 crits is d8). Litter size may be capped at a number determined'
+            + ' by the breeder and distributed among multiple litters.',
+          },
+          {
+            name: 'Overactive Ovaries',
+            traitId: 'overactiveOvaries',
+            description: 'During Initial pregnancy check, bred gains a -1 roll modifier on all rolls'
+            + ' for cervical penetration. During Ovulation check, roll d6\'s instead of d3\'s for egg count.',
+          },
+          {
+            name: 'Tight Cervix',
+            traitId: 'tightCervix',
+            description: 'If cervical penetration occurs, subtract -1 from your rolls. During '
+            + 'fertilization check, breeder gains +2 to rolls.',
+          },
+        ],
+        breederTraits:
+        [
+          {
+            name: 'Natural Born Stud',
+            traitId: 'naturalBornStud',
+            description: 'During initial pregnancy check, add +2 to all non crit rolls for the breeder. And on '
+            + 'any crit roll, roll another die (Extra crits for Fertilization check)',
+          },
+          {
+            name: 'Domineering Seed',
+            traitId: 'domineeringSeed',
+            description: 'During initial pregnancy check, on any crit roll, subtract the amount'
+            + ' over 10 for the breeder\'s result from the bred\'s result. Any natural roll of 10'
+            + ' also adds 1d3 eggs to opponent\'s ovulation check',
+          },
+          {
+            name: 'Deep Insemination',
+            traitId: 'deepInsemination',
+            description: 'During initial pregnancy check, have a +2 modifier instead of +1 for'
+            + ' cervical penetration. Every time you crit during initial pregnancy check, you '
+            + 'may have your opponent reroll their result for that check',
+          },
+          {
+            name: 'Potent Virility',
+            traitId: 'potentVirility',
+            description: 'During initial pregnancy check, have a +2 modifier instead of +1 for '
+            + 'Virility. During Fertilization check, instead bonus rolling for twins, any natural'
+            + ' 90+ is automatically a twin, with a bonus roll offering a chance at triplets'
+            + 'according to normal rules.',
+          },
+        ],
+        secretTraits: [
+          // 👀
+        ],
+      },
+
+      // TODO: implement the rest of the checkboxes/other input
+      //       form fields in a manner just like traits. Much cleaner
+      //       and much more scaleable.
+      playerOptionsNewToBeRenamed: {
+        bred: {
+          checkboxes: {
+            checked: [],
+            formInfo: [
+              {
+                id: 'inHeat',
+                label: 'In Heat',
+                helpText: 'Big boost to eggs ovulated and fertility.',
+                bad: false,
+              },
+              {
+                id: 'desireForImpreg',
+                label: 'Strong Desire for Impregnation',
+                helpText: 'Boosts fertility. They know what they want. Now give it to them.',
+                bad: false,
+              },
+              {
+                id: 'arousedBeforeSex',
+                label: 'Aroused Before Sex',
+                helpText: 'They don\'t need any convincing. They\'re already yours... Lowers bred\'s chance to resist impregnation.',
+                bad: false,
+              },
+              {
+                id: 'lowFertility',
+                label: 'Low Innate Fertility',
+                helpText: 'Naturally barren? Cursed? Whatever the reason, this oven has some issues. Hopefully you can fix that.~',
+                bad: true,
+              },
+              {
+                id: 'differentSpecies',
+                label: 'Different Species',
+                helpText: 'Differing genetics makes it a bit more difficult to conceive... (Note: Play however you want, but I\'d suggest keeping it "high-level" like "canines" vs. "wolf/dingo" etc.)',
+                bad: true,
+              },
+            ],
+          },
+          range: {
+            ovulationDrugs: {
+              id: 'ovulationDrugs',
+              label: 'Ovulation Drugs: {{bred_ovulationDrugsValue}}',
+              helpText: '',
+              min: 0,
+              max: 50,
+              default: 0,
+              value: '',
+            },
+          },
+          radioGroups: {
+            sexPosition: {
+              id: '',
+              label: '',
+              helpText: '',
+              options: [
+                { text: 'Doggy Style', value: 'doggyStyle' },
+                { text: 'Mating Press', value: 'matingPress' },
+                { text: 'Other', value: 'other' },
+              ],
+              default: 'other',
+              selected: '',
+            },
+          },
+        },
+        breeder: {
+          checkboxes: {
+            checked: [],
+            formInfo: [
+              {
+                id: 'hasKnot',
+                label: 'Has Knot',
+                helpText: 'A nice plump bulb at the end of the shaft to keep that seed locked firmly in place. Need I say more?',
+                bad: false,
+              },
+              {
+                id: 'hasBarbs',
+                label: 'Has Barbs/Penile Spines',
+                helpText: 'Each rake of those spines along the tight walls of the one being bred sends signals to the ovaries that a true stud is about to deliver their payload.',
+                bad: false,
+              },
+              {
+                id: 'inRut',
+                label: 'In Rut',
+                helpText: 'A special time in which the breeder\'s virility and almost primal drive to breed is drastically increased. Watch out: it\'s mating season...',
+                bad: false,
+              },
+              {
+                id: 'cameMoreThanOnce',
+                label: 'Came > 1 time in who was bred',
+                helpText: '"You think you\'re good and bred, huh? Let\'s go again. Y\'know... Just to be sure.~"',
+                bad: false,
+              },
+              {
+                id: 'extraFluids',
+                label: 'Extra Fluids',
+                helpText: 'All that slick belching from the tip of that spire really helps for making sure the breeder can get themselves as far in as they can possibly get.',
+                bad: false,
+              },
+              {
+                id: 'extendedPenetration',
+                label: 'Extended Penetration Duration',
+                helpText: '"Woah woah woah, where you going? I tied - we ain\'t going anywhere. Guess we have no choice but to let that baby gravy brew and churn in that womb of yours.~"',
+                bad: false,
+              },
+              {
+                id: 'lowSpermCount',
+                label: 'Low Natural Sperm Count',
+                helpText: 'Not quite shooting blanks, but the breeder has quite a few less tadpoles in each load than the average stud.',
+                bad: true,
+              },
+            ],
+          },
+          range: {
+            ovulationDrugs: {
+              id: 'ovulationDrugs',
+              label: 'Ovulation Drugs: {{bred_ovulationDrugsValue}}',
+              helpText: '',
+              min: 0,
+              max: 50,
+              default: 0,
+              value: '',
+            },
+          },
+          radioGroups: {
+            sexPosition: {
+              id: '',
+              label: '',
+              helpText: '',
+              options: [
+                { text: 'Doggy Style', value: 'doggyStyle' },
+                { text: 'Mating Press', value: 'matingPress' },
+                { text: 'Other', value: 'other' },
+              ],
+              default: 'other',
+              selected: '',
+            },
+          },
+        },
+        selectedTraits: {
+          bred: [],
+          breeder: [],
+          secret: [],
+        },
+      },
+
       phase: 0,
       playerOptions: [],
 
@@ -1403,12 +1480,13 @@ export default {
     },
     startPhaseImpreg() {
       this.phase = 1;
+      // todo: change this over to pass the full playerOptionsNewToBeRenamed
       this.playerOptions = {
         bred_dice: this.bred_dice,
         breeder_dice: this.breeder_dice,
         bredSeries: this.bredSeries,
         breederSeries: this.breederSeries,
-        bred_checked: this.bred_checked,
+        bred_checked: this.playerOptionsNewToBeRenamed.bred.checkboxes.checked,
         bred_fertilityBonusValue: this.bred_fertilityBonusValue,
         bred_fertilityAidsValue: this.bred_fertilityAidsValue,
         bred_ovulationDrugsValue: this.bred_ovulationDrugsValue,
@@ -1420,7 +1498,7 @@ export default {
         bred_penetrationDepthOptions: this.bred_penetrationDepthOptions,
         bred_wetnessSelected: this.bred_wetnessSelected,
         bred_wetnessOptions: this.bred_wetnessOptions,
-        breeder_checked: this.breeder_checked,
+        breeder_checked: this.playerOptionsNewToBeRenamed.breeder.checkboxes.checked,
         breeder_virilityBonusValue: this.breeder_virilityBonusValue,
         breeder_virilityAidsValue: this.breeder_virilityAidsValue,
         breeder_numberOrgasmsValue: this.breeder_numberOrgasmsValue,
@@ -1537,8 +1615,6 @@ export default {
 
       this.genderSeries = [genderCount.male, genderCount.female, genderCount.herm];
       this.speciesSeries = [speciesCount.bred, speciesCount.breeder, speciesCount.hybrid];
-      // console.log(this.genderSeries);
-      // console.log(this.speciesSeries);
 
       const numEggies = Object.keys(this.eggs.eggList).length;
       const multipleTracker = {
