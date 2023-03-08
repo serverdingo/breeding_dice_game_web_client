@@ -281,7 +281,7 @@ function fertEgg(diceRoller, fertMod, babiesToAdd) {
     // Natural roll of 90+ - chance for extra baby!
 
     babiesToAddCopy = fertEgg(diceRoller, fertMod, babiesToAddCopy);
-  } else if (naturalRoll > 100) {
+  } else if (naturalRoll >= 100) {
     // Naturall roll of 100 - extra baby guaranteed, and try for another!
     babiesToAddCopy.push({
       gender: diceRoller.roll('1d3').result,
