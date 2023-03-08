@@ -925,8 +925,18 @@
               </b-row>
               <br/>
               <b-row align-h="center">
+                <b-col md="auto">
+                  <b-img src="https://static.f-list.net/images/eicon/omnifertile.gif" fluid alt="omnifert">
+                  </b-img>
+                </b-col>
+                <b-col md="auto">
                   You made&nbsp;<h2><b class="text-danger">{{babies.length}}</b></h2>&nbsp;babies
                   from&nbsp;<h2><b class="text-primary">{{eggs.count}}</b></h2>&nbsp;eggs!
+                </b-col>
+                <b-col md="auto">
+                  <b-img src="https://static.f-list.net/images/eicon/omnifertile.gif" fluid alt="omnifert">
+                  </b-img>
+                </b-col>
               </b-row>
             </b-card-body>
           </b-card>
