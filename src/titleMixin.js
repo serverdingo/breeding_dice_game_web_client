@@ -5,7 +5,7 @@ function getTitle(vm) {
       ? title.call(vm)
       : title;
   }
-  return 'Dingo Default';
+  return 'Breeding Dice Game';
 }
 export default {
   created() {

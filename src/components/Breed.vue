@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="text-center">Serv's Breeding Calculator Thing</h1>
+    <h1 class="text-center">Serv's Breeding Dice Game Thing</h1>
     <br/>
     <b-collapse id="accordion-settings" visible accordion="main-accordion" role="tabpanel">
     <h2 class="text-center">1. Set your settings</h2>
@@ -17,6 +17,14 @@
           <b-card-body>
             <b-row>
               <b-col md="auto">
+                <b-icon id="help-button-bred_inHeat" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-bred_inHeat" triggers="hover">
+                  Big boost to eggs ovulated and fertility.
+                </b-tooltip>
+              </b-col>
+              <b-col md="auto">
                 <input type="checkbox" id="bred_inHeat" value="bred_inHeat" v-model="bred_checked">
               </b-col>
               <b-col md="auto">
@@ -25,6 +33,14 @@
             </b-row>
 
             <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-bred_desireForImpreg" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-bred_desireForImpreg" triggers="hover">
+                  Boosts fertility. They know what they want. Now give it to them.
+                </b-tooltip>
+              </b-col>
               <b-col md="auto">
               <input type="checkbox" id="bred_desireForImpreg" value="bred_desireForImpreg"
                 v-model="bred_checked">
@@ -36,6 +52,15 @@
 
             <b-row>
               <b-col md="auto">
+                <b-icon id="help-button-bred_arousedBeforeSex" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-bred_arousedBeforeSex" triggers="hover">
+                  They don't need any convincing. They're already yours...
+                  Lowers bred's chance to resist impregnation.
+                </b-tooltip>
+              </b-col>
+              <b-col md="auto">
                 <input type="checkbox" id="bred_arousedBeforeSex" value="bred_arousedBeforeSex"
                 v-model="bred_checked">
               </b-col>
@@ -46,6 +71,15 @@
 
             <b-row>
               <b-col md="auto">
+                <b-icon id="help-button-bred_lowFertility" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-bred_lowFertility" triggers="hover">
+                  Naturally barren? Cursed? Whatever the reason, this oven has some issues.
+                  Hopefully you can fix that.~
+                </b-tooltip>
+              </b-col>
+              <b-col md="auto">
                 <input type="checkbox" id="bred_lowFertility" value="bred_lowFertility"
                 v-model="bred_checked">
               </b-col>
@@ -55,6 +89,16 @@
             </b-row>
             <b-row>
               <b-col md="auto">
+                <b-icon id="help-button-bred_differentSpecies" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-bred_differentSpecies" triggers="hover">
+                  Differing genetics makes it a bit more difficult to conceive...
+                  (Note: Play however you want, but I'd suggest keeping it "high-level" like
+                  "canines" vs. "wolf/dingo" etc.)
+                </b-tooltip>
+              </b-col>
+              <b-col md="auto">
                 <input type="checkbox" id="bred_differentSpecies" value="bred_differentSpecies"
                 v-model="bred_checked">
               </b-col>
@@ -62,6 +106,16 @@
                 <label class="text-danger" for="bred_differentSpecies">Different Species</label>
               </b-col>
             </b-row>
+            <b-row>
+            <b-col md="auto">
+                <b-icon id="help-button-bred_position" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-bred_position" triggers="hover">
+                  Getting the right angle helps make sure that seed gets
+                  where it needs to so it can work its magic.
+                </b-tooltip>
+              </b-col>
             <b-form-group label="Sex Position" v-slot="{ ariaDescribedby }">
               <b-form-radio-group
                   id="bred_position"
@@ -71,6 +125,17 @@
                   name="bred_position"
                 ></b-form-radio-group>
             </b-form-group>
+          </b-row>
+          <b-row>
+            <b-col md="auto">
+              <b-icon id="help-button-bred_penetrationDepth" icon="question-circle-fill"
+              aria-label="Help" font-scale=".8">
+              </b-icon>
+              <b-tooltip target="help-button-bred_penetrationDepth" triggers="hover">
+                Conceiving is a bit easier if you give that spunk a one way
+                trip to those egg factories.
+              </b-tooltip>
+            </b-col>
             <b-form-group label="Penetration Depth" v-slot="{ ariaDescribedby }">
               <b-form-radio-group
                   id="bred_penetrationDepth"
@@ -80,6 +145,17 @@
                   name="bred_penetrationDepth"
                 ></b-form-radio-group>
             </b-form-group>
+          </b-row>
+          <b-row>
+            <b-col md="auto">
+              <b-icon id="help-button-bred_wetness" icon="question-circle-fill"
+              aria-label="Help" font-scale=".8">
+              </b-icon>
+              <b-tooltip target="help-button-bred_wetness" triggers="hover">
+                While wetness may not <i>directly</i> boost fertility,
+                the lack of 'friction' can only serve to help.~
+              </b-tooltip>
+            </b-col>
             <b-form-group label="Wetness" v-slot="{ ariaDescribedby }">
               <b-form-radio-group
                   id="bred_wetness"
@@ -89,67 +165,106 @@
                   name="bred_wetness"
                 ></b-form-radio-group>
             </b-form-group>
+          </b-row>
           </b-card-body>
         </b-col>
         <b-col>
           <b-card-body>
 
             <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-bred_fertilityBonus" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-bred_fertilityBonus" triggers="hover">
+                  Someone's innate fertility. This is usually achieved either naturally
+                  or through some permanent enhancement or modification to the one being bred.
+                </b-tooltip>
+              </b-col>
               <label for="bred_fertilityBonus">
                 Fertility Bonus: {{bred_fertilityBonusValue}}
               </label>
               </b-row>
-          <b-row>
               <b-form-input class="w-50" name="bred_fertilityBonus" id="bred_fertilityBonus"
                 v-model="bred_fertilityBonusValue" type="range" min="0" max="50">
               </b-form-input>
-            </b-row>
 
             <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-bred_fertilityAids" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-bred_fertilityAids" triggers="hover">
+                  A temporary boost to one's fertility or ability to conceive. Pills,
+                  potions, medicine, energy boosts - things like that!
+                </b-tooltip>
+              </b-col>
               <label for="bred_fertilityAids">
                 Fertility Aids: {{bred_fertilityAidsValue}}
               </label>
               </b-row>
-          <b-row>
+
               <b-form-input class="w-50" name="bred_fertilityAids" id="bred_fertilityAids"
                 v-model="bred_fertilityAidsValue" type="range" min="0" max="50">
               </b-form-input>
-            </b-row>
 
             <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-bred_previousImpregnations" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-bred_previousImpregnations" triggers="hover">
+                  Those who have had previous experience baking buns in their oven
+                  will find it a bit easier to conceive with every successive pregnancy.
+                </b-tooltip>
+              </b-col>
               <label for="bred_previousImpregnations">
                 Previous Impregnations: {{bred_previousImpregnationsValue}}
               </label>
               </b-row>
-          <b-row>
+
               <b-form-input class="w-50" name="bred_previousImpregnations"
                 id="bred_previousImpregnations"
                 v-model="bred_previousImpregnationsValue" type="range" min="0" max="50">
               </b-form-input>
-            </b-row>
 
             <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-bred_numberOrgasms" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-bred_numberOrgasms" triggers="hover">
+                  Not only does every orgasm help milk the stud of their seed, but
+                  is said to also stimulate the ovaries to release their bounty.
+                </b-tooltip>
+              </b-col>
               <label for="bred_numberOrgasms">
                 Number of Orgasms: {{bred_numberOrgasmsValue}}
               </label>
               </b-row>
-          <b-row>
+
               <b-form-input class="w-50" name="bred_numberOrgasms" id="bred_numberOrgasms"
               v-model="bred_numberOrgasmsValue" type="range" min="0" max="50">
               </b-form-input>
-            </b-row>
 
             <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-bred_ovulationDrugs" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-bred_ovulationDrugs" triggers="hover">
+                  Drugs/stimulants given to the one being bred that result in the womb's
+                  ovaries releasing more and more precious ova for the breeder's seed to claim.
+                </b-tooltip>
+              </b-col>
               <label for="bred_ovulationDrugs">
                 Ovulation Drugs: {{bred_ovulationDrugsValue}}
               </label>
               </b-row>
-          <b-row>
               <b-form-input class="w-50" name="bred_ovulationDrugs"
                 id="bred_ovulationDrugs"
                 v-model="bred_ovulationDrugsValue" type="range" min="0" max="50">
               </b-form-input>
-            </b-row>
           </b-card-body>
         </b-col>
       </b-row>
@@ -166,6 +281,15 @@
           <b-card-body>
             <b-row>
               <b-col md="auto">
+                <b-icon id="help-button-breeder_hasKnot" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-breeder_hasKnot" triggers="hover">
+                  A nice plump bulb at the end of the shaft to keep that seed locked
+                  firmly in place. Need I say more?
+                </b-tooltip>
+              </b-col>
+              <b-col md="auto">
                 <input type="checkbox" id="breeder_hasKnot"
                 value="breeder_hasKnot" v-model="breeder_checked">
               </b-col>
@@ -174,6 +298,16 @@
               </b-col>
             </b-row>
             <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-breeder_hasBarbs" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-breeder_hasBarbs" triggers="hover">
+                  Each rake of those spines along the tight walls of the one being bred
+                  sends signals to the ovaries that a true stud is about to deliver their
+                  payload.
+                </b-tooltip>
+              </b-col>
               <b-col md="auto">
                 <input type="checkbox" id="breeder_hasBarbs"
                 value="breeder_hasBarbs" v-model="breeder_checked">
@@ -184,6 +318,15 @@
             </b-row>
             <b-row>
               <b-col md="auto">
+                <b-icon id="help-button-breeder_inRut" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-breeder_inRut" triggers="hover">
+                  A special time in which the breeder's virility and almost primal drive to
+                  breed is drastically increased. Watch out: it's mating season...
+                </b-tooltip>
+              </b-col>
+              <b-col md="auto">
                 <input type="checkbox" id="breeder_inRut"
                 value="breeder_inRut" v-model="breeder_checked">
               </b-col>
@@ -192,6 +335,15 @@
               </b-col>
             </b-row>
             <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-breeder_cameMoreThanOnce" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-breeder_cameMoreThanOnce" triggers="hover">
+                  "You think you're good and bred, huh? Let's go again.
+                  Y'know... Just to be sure.~"
+                </b-tooltip>
+              </b-col>
               <b-col md="auto">
                 <input type="checkbox" id="breeder_cameMoreThanOnce"
                 value="breeder_cameMoreThanOnce" v-model="breeder_checked">
@@ -202,6 +354,15 @@
             </b-row>
             <b-row>
               <b-col md="auto">
+                <b-icon id="help-button-breeder_extraFluids" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-breeder_extraFluids" triggers="hover">
+                  All that slick belching from the tip of that spire really helps for
+                  making sure the breeder can get themselves as far in as they can possibly get.
+                </b-tooltip>
+              </b-col>
+              <b-col md="auto">
                 <input type="checkbox" id="breeder_extraFluids"
                   value="breeder_extraFluids" v-model="breeder_checked">
               </b-col>
@@ -210,6 +371,16 @@
               </b-col>
             </b-row>
             <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-breeder_extendedPenetration" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-breeder_extendedPenetration" triggers="hover">
+                  "Woah woah woah, where you going? I tied, we ain't going anywhere. Guess
+                  we have no choice but to let that baby gravy brew and churn in that womb of
+                  yours.~"
+                </b-tooltip>
+              </b-col>
               <b-col md="auto">
                 <input type="checkbox" id="breeder_extendedPenetration"
                 value="breeder_extendedPenetration" v-model="breeder_checked">
@@ -220,6 +391,15 @@
             </b-row>
             <b-row>
               <b-col md="auto">
+                <b-icon id="help-button-breeder_lowSpermCount" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-breeder_lowSpermCount" triggers="hover">
+                  Not quite shooting blanks, but the breeder has quite a few less tadpoles
+                  in each load than the average stud.
+                </b-tooltip>
+              </b-col>
+              <b-col md="auto">
                 <input type="checkbox" id="breeder_lowSpermCount"
                 value="breeder_lowSpermCount" v-model="breeder_checked">
               </b-col>
@@ -228,6 +408,17 @@
                 </label>
               </b-col>
             </b-row>
+            <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-breeder_cumflation" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-breeder_cumflation" triggers="hover">
+                  "Goddamn, you look pregnant already. And if I didn't know better,
+                  I'd think you were already starting to swell.~ Can't wait to see
+                  how you look in 9 months from now..."
+                </b-tooltip>
+              </b-col>
             <b-form-group label="Cumflation" v-slot="{ ariaDescribedby }">
               <b-form-radio-group
                   id="breeder_cumflation"
@@ -237,45 +428,89 @@
                   name="breeder_cumflation"
                 ></b-form-radio-group>
             </b-form-group>
+          </b-row>
           </b-card-body>
         </b-col>
         <b-col>
           <b-card-body>
             <row>
+              <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-breeder_virilityBonus" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-breeder_virilityBonus" triggers="hover">
+                  The breeder's natural virility. For whatever reason, this stud was born
+                  for making babies. Let's just hope he doesn't get even better at it as he goes...
+                </b-tooltip>
+              </b-col>
               <label for="breeder_virilityBonus">
                 Virility Bonus: {{breeder_virilityBonusValue}}
               </label>
-              <br/>
+            </b-row>
               <b-form-input class="w-50" name="breeder_virilityBonus" id="breeder_virilityBonus"
                 v-model="breeder_virilityBonusValue" type="range" min="0" max="50">
               </b-form-input>
             </row>
             <br/>
             <row>
+              <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-breeder_virilityAids" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-breeder_virilityAids" triggers="hover">
+                  "Virilify-2000 - Serving size: 1 pill, huh? Fuck that.
+                  I say Serving size: 1 bottle. Increase as needed. Doctor's orders.~"
+                </b-tooltip>
+              </b-col>
               <label for="breeder_virilityAids">
                 Virility Aids: {{breeder_virilityAidsValue}}
               </label>
-              <br/>
+            </b-row>
               <b-form-input class="w-50" name="breeder_virilityAids" id="breeder_virilityAids"
                 v-model="breeder_virilityAidsValue" type="range" min="0" max="50">
               </b-form-input>
             </row>
             <br/>
             <row>
+              <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-breeder_numberOrgasms" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-breeder_numberOrgasms" triggers="hover">
+                  If you thought that first wave of gravy made a lot of pups, you're in
+                  for a wild ride. They're just getting started...
+                </b-tooltip>
+              </b-col>
               <label for="breeder_numberOrgasms">
                 Number of Orgasms: {{breeder_numberOrgasmsValue}}
               </label>
-              <br/>
+            </b-row>
               <b-form-input class="w-50" name="breeder_numberOrgasms" id="breeder_numberOrgasms"
               v-model="breeder_numberOrgasmsValue" type="range" min="0" max="50">
               </b-form-input>
             </row>
             <br/>
             <row>
+              <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-breeder_undefeatedContraceptives"
+                icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-breeder_undefeatedContraceptives"
+                triggers="hover">
+                  Whether it's birth control, plan B, spermicidal lube, or a good ol' rubber -
+                  something's trying to keep the breeder from doing what he does best. "Trying",
+                  of course, being the key word.~
+                </b-tooltip>
+              </b-col>
               <label class="text-danger" for="breeder_undefeatedContraceptives">
                 Undefeated Contraceptives: {{breeder_undefeatedContraceptivesValue}}
               </label>
-              <br/>
+              </b-row>
               <b-form-input class="w-50" name="breeder_undefeatedContraceptives"
                 id="breeder_undefeatedContraceptives"
                 v-model="breeder_undefeatedContraceptivesValue" type="range" min="0" max="50">
@@ -283,10 +518,23 @@
             </row>
             <br/>
             <row>
+              <b-row>
+              <b-col md="auto">
+                <b-icon id="help-button-breeder_defeatedContraceptives"
+                icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip target="help-button-breeder_defeatedContraceptives"
+                triggers="hover">
+                  Maybe the condom ripped, or that birth control was expired/was
+                  ineffective. Better than nothing for stopping a pregnancy, but
+                  drastically less effective than the user probably would've hoped...
+                </b-tooltip>
+              </b-col>
               <label class="text-danger" for="breeder_defeatedContraceptives">
                 Defeated Contraceptives: {{breeder_defeatedContraceptivesValue}}
               </label>
-              <br/>
+              </b-row>
               <b-form-input class="w-50" name="breeder_defeatedContraceptives"
                 id="breeder_defeatedContraceptives"
                 v-model="breeder_defeatedContraceptivesValue" type="range" min="0" max="50">
@@ -748,8 +996,8 @@
           <b-icon icon="envelope"></b-icon>
         </b-col>
         <b-col md="auto">
-          Questions? Comments? Concerns? Confusions? <a href="https://www.f-list.net/c/serv/">Send a note!
-          </a>
+          Questions/Feedback? <a href="https://www.f-list.net/c/serv/">Send a note!</a> Based on
+          <a href="https://www.f-list.net/c/taji%20amatsukaze/">these rules</a>.
         </b-col>
         <b-col md="auto">
           <b-icon icon="github"></b-icon>
@@ -769,8 +1017,8 @@
           <b-icon icon="envelope"></b-icon>
         </b-col>
         <b-col md="auto">
-          Questions? Comments? Concerns? Confusions? <a href="https://www.f-list.net/c/serv/">Send a note!
-          </a>
+          Questions/Feedback? <a href="https://www.f-list.net/c/serv/">Send a note!</a> Based on
+          <a href="https://www.f-list.net/c/taji%20amatsukaze/">these rules</a>.
         </b-col>
         <b-col md="auto">
           <b-icon icon="github"></b-icon>
