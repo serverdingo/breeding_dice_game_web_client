@@ -803,7 +803,7 @@ export default {
           {
             name: 'Potent Virility',
             traitId: 'potentVirility',
-            description: 'During initial pregnancy check, \'Virility Bonus\' grants a +2 modifier per unit instead of +1. During Fertilization check, isntead of only occurring on a natural 100, any natural 90+ is now automatically a twin - and the bonus roll for a chance at twins or more is now attempted on a natural roll of 80+ instead of 90+.',
+            description: 'During initial pregnancy check, \'Virility Bonus\' grants a +2 modifier per unit instead of +1. During Fertilization check, instead of only occurring on a natural 100, any natural 90+ is now automatically a twin - and the bonus roll for a chance at twins or more is now attempted on a natural roll of 80+ instead of 90+.',
           },
         ],
         secretTraits: [
