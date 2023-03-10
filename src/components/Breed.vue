@@ -527,42 +527,29 @@
       </div>
       <div v-else>
         <b-row class="justify-content-md-center text-center">
-          <!--<b-col md="auto">
-            <b-img src="https://static.f-list.net/images/eicon/wombknot2.gif"
-            style="transform: scaleX(-1);" fluid alt="Preggo R2">
-            </b-img>
-            <b-img src="https://static.f-list.net/images/eicon/wombknot1.gif"
-            style="transform: scaleX(-1);" fluid alt="Preggo R1">
-            </b-img>
-          </b-col>
-          <b-col md="auto">
-            <h1 class="text-danger" align-self="center"><br/>Impregnation Successful</h1>
-          </b-col>
-          <b-col md="auto">
-            <b-img src="https://static.f-list.net/images/eicon/wombknot1.gif" fluid alt="Preggo R1">
-            </b-img>
-            <b-img src="https://static.f-list.net/images/eicon/wombknot2.gif" fluid alt="Preggo R2">
-            </b-img>
-          </b-col>-->
+          <!-- TODO: add more fun egg shit/flourishes/flavor -->
         </b-row>
         <br/>
         <b-row v-if="phase>=2" class="justify-content-md-center">
-            <b-col col lg="2" class="text-right">
-              <b-icon id="fert-help-button"
-              icon="question-circle-fill" aria-label="Help"></b-icon>
-              <b-tooltip target="fert-help-button" triggers="hover">
-                Got the eggs, time to add the gravy~</b-tooltip>
-            </b-col>
-            <b-col cols="12" md="auto">
-              <h2>
-                <b-button size="lg" id="startFinalPhaseButton"
-                      variant="dark"  @click="startFinalPhase"
-                      class="text-center" v-b-toggle.accordion-final>
-                      Fertilize
-                </b-button>
-              </h2>
-            </b-col>
-            <b-col col lg="2"></b-col>
+          <!-- TODO: add option to continue as normal, or go through the fert process slowly
+                     and watch each result one at a time. Perhaps only
+                     if under 100 eggs or something. -->
+          <b-col col lg="2" class="text-right">
+            <b-icon id="fert-help-button"
+            icon="question-circle-fill" aria-label="Help"></b-icon>
+            <b-tooltip target="fert-help-button" triggers="hover">
+              Got the eggs, time to add the gravy~</b-tooltip>
+          </b-col>
+          <b-col cols="12" md="auto">
+            <h2>
+              <b-button size="lg" id="startFinalPhaseButton"
+                    variant="dark"  @click="startFinalPhase"
+                    class="text-center" v-b-toggle.accordion-final>
+                    Fertilize
+              </b-button>
+            </h2>
+          </b-col>
+          <b-col col lg="2"></b-col>
         </b-row>
     </div>
   </b-collapse>
@@ -1121,44 +1108,6 @@ export default {
       bredSeries: [-53],
       breederSeries: [93],
       msg: '',
-      bred_checked: [],
-      bred_fertilityBonusValue: '0',
-      bred_fertilityAidsValue: '0',
-      bred_ovulationDrugsValue: '0',
-      bred_previousImpregnationsValue: '0',
-      bred_numberOrgasmsValue: '0',
-      bred_positionSelected: 'other',
-      bred_positionOptions: [
-        { text: 'Doggy Style', value: 'doggyStyle' },
-        { text: 'Mating Press', value: 'matingPress' },
-        { text: 'Other', value: 'other' },
-      ],
-      bred_penetrationDepthSelected: 'normal',
-      bred_penetrationDepthOptions: [
-        { text: 'Normal', value: 'normal' },
-        { text: 'Flooded Overies', value: 'floodedOvaries' },
-        { text: 'Cervical Penetration', value: 'cervicalPen' },
-      ],
-      bred_wetnessSelected: 'none',
-      bred_wetnessOptions: [
-        { text: 'None/Lube Needed', value: 'none' },
-        { text: 'Dripping', value: 'dripping' },
-        { text: 'Constant Stream', value: 'constantStream' },
-      ],
-
-      breeder_checked: [],
-      breeder_virilityBonusValue: '0',
-      breeder_virilityAidsValue: '0',
-      breeder_numberOrgasmsValue: '0',
-      breeder_defeatedContraceptivesValue: '0',
-      breeder_undefeatedContraceptivesValue: '0',
-      breeder_cumflationSelected: 'none',
-      breeder_cumflationOptions: [
-        { text: 'None', value: 'none' },
-        { text: 'Paunch', value: 'paunch' },
-        { text: 'Pregnant-like', value: 'pregnantLike' },
-        { text: 'Overflowing', value: 'overflowing' },
-      ],
 
       babiesSeries: [],
       babiesChartOptions: {
