@@ -22,7 +22,7 @@
             <b-col>
           <b-card-body>
             <b-row v-for="checkbox in playerOptions.bred.checkboxes.formInfo"
-              :key="checkbox">
+              :key="checkbox.id">
               <b-col md="auto">
                 <b-icon :id="`help-button-${checkbox.id}`" icon="question-circle-fill"
                 aria-label="Help" font-scale=".8">
@@ -44,7 +44,7 @@
             </b-row>
 
             <b-row v-for="radioGroup in playerOptions.bred.radioGroups"
-              :key="radioGroup">
+              :key="radioGroup.id">
             <b-col md="auto">
                 <b-icon :id="`help-button-${radioGroup.id}`" icon="question-circle-fill"
                 aria-label="Help" font-scale=".8">
@@ -68,7 +68,7 @@
         <b-col>
           <b-card-body>
             <div v-for="range in playerOptions.bred.ranges"
-              :key="range">
+              :key="range.id">
             <b-row>
               <b-col md="auto">
                 <b-icon :id="`help-button-${range.id}`" icon="question-circle-fill"
@@ -106,7 +106,7 @@
             <b-col>
           <b-card-body>
               <b-row v-for="checkbox in playerOptions.breeder.checkboxes.formInfo"
-              :key="checkbox">
+              :key="checkbox.id">
               <b-col md="auto">
                 <b-icon :id="`help-button-${checkbox.id}`" icon="question-circle-fill"
                 aria-label="Help" font-scale=".8">
@@ -127,7 +127,7 @@
               </b-col>
             </b-row>
             <b-row v-for="radioGroup in playerOptions.breeder.radioGroups"
-              :key="radioGroup">
+              :key="radioGroup.id">
             <b-col md="auto">
                 <b-icon :id="`help-button-${radioGroup.id}`" icon="question-circle-fill"
                 aria-label="Help" font-scale=".8">
@@ -151,7 +151,7 @@
         <b-col>
           <b-card-body>
             <div v-for="range in playerOptions.breeder.ranges"
-              :key="range">
+              :key="range.id">
             <b-row>
               <b-col md="auto">
                 <b-icon :id="`help-button-${range.id}`" icon="question-circle-fill"
@@ -199,7 +199,7 @@
           header-bg-variant="primary"
           header-text-variant="white"
           align="center">
-            <b-row v-for="trait in traits.bredTraits" :key="trait">
+            <b-row v-for="trait in traits.bredTraits" :key="trait.id">
               <b-col md="auto">
                 <b-icon :id="`help-button-${trait.traitId}`" icon="question-circle-fill"
                 aria-label="Help" font-scale=".8">
@@ -223,7 +223,7 @@
           header-bg-variant="danger"
           header-text-variant="white"
           align="center">
-            <b-row v-for="trait in traits.breederTraits" :key="trait">
+            <b-row v-for="trait in traits.breederTraits" :key="trait.id">
               <b-col md="auto">
                 <b-icon :id="`help-button-${trait.traitId}`" icon="question-circle-fill"
                 aria-label="Help" font-scale=".8">
@@ -245,6 +245,26 @@
       </div>
         </b-collapse>
       </b-card>
+      <b-row class="justify-content-md-center">
+        <b-col class="text-center">
+          <b-button size="sm" id="initialSaveButton"
+                variant="dark"  @click="saveData">
+                Save Settings
+          </b-button>
+          <b-button size="sm" id="initialLoadButton"
+                variant="dark"  @click="loadData">
+                Load Settings
+          </b-button>
+          <b-button size="sm" id="initialClearButton"
+                variant="dark"  @click="clearData">
+                Delete Saved Settings
+          </b-button>
+        </b-col>
+      </b-row>
+      <b-row class="justify-content-md-center" :key="saveKey">
+        <br/>
+        {{saveMessage}}
+      </b-row>
     </div><br>
 
     <!--  _____   ____  _      _       _____
@@ -285,8 +305,9 @@
           <b-list-group>
             <b-row cols="5">
               <!--TODO: convert min/max logic to global constants for tweaks by traits-->
-            <b-form-input class="w-25 text-center" :id="die.bredId" v-for="die in playerRolls"
-            type="number" :key="die" :value="die.bredValue" pattern="\d+"
+            <b-form-input class="w-25 text-center" :id="die.bredId"
+            v-for="(die, idx) in playerRolls"
+            type="number" :key="idx" :value="die.bredValue" pattern="\d+"
             min="1" max="10" default="1" oninput="validity.valid&&(value!='')||(value='1')">
             </b-form-input></b-row>
           </b-list-group>
@@ -300,8 +321,9 @@
         >
           <b-list-group>
             <b-row cols="5">
-            <b-form-input class="w-25 text-center" :id="die.breederId" v-for="die in playerRolls"
-            type="number" :key="die" :value="die.breederValue" pattern="\d+"
+            <b-form-input class="w-25 text-center" :id="die.breederId"
+            v-for="(die, idx) in playerRolls"
+            type="number" :key="idx" :value="die.breederValue" pattern="\d+"
             min="1" max="10" default="1" oninput="validity.valid&&(value!='')||(value='1')">
             </b-form-input>
           </b-row>
@@ -353,7 +375,7 @@
           class="text-center">
 
             <b-card-body no-body class="text-center" :id="die.id"
-            v-for="die in playerRolls" :key="die">
+            v-for="(die, idx) in playerRolls" :key="idx">
               <b-row align-h="center">
                 <b-badge>{{die.bredCalcValue}}</b-badge>
               </b-row>
@@ -367,7 +389,7 @@
             header="VS."
             class="text-center">
             <b-card-body no-body class="text-center"
-            v-for="result in playerRolls" :key="result">
+            v-for="(result, idx) in playerRolls" :key="idx">
               <b-row align-h="center">
                 <b v-if="result.winner==='breeder'">
                   <b class="text-danger">Breeder</b> wins! 🎉
@@ -393,7 +415,7 @@
         align="center">
 
           <b-card-body no-body class="text-center" :id="die.id"
-          v-for="die in playerRolls" :key="die">
+          v-for="(die, idx) in playerRolls" :key="idx">
             <b-row align-h="center">
               <b-badge>{{die.breederCalcValue}}</b-badge>
             </b-row>
@@ -651,6 +673,17 @@
                     Go again?
               </b-button>
             </h2>
+          </b-row>
+          <b-row class="justify-content-md-center">
+            <b-col class="text-center">
+              <b-button size="sm" id="finalSaveButton"
+                    variant="dark"  @click="saveData">
+                    Save Settings
+              </b-button>
+            </b-col>
+          </b-row>
+          <b-row class="justify-content-md-center">
+            {{saveMessage}}
           </b-row>
         </b-col>
         <b-col col lg="2">
@@ -1024,6 +1057,11 @@ export default {
         },
       },
 
+      // Variables used for the save functionality.
+      // saveKey is needed to force component update
+      saveMessage: '',
+      saveKey: 0,
+
       phase: 0,
 
       fertilizeChance: 0,
@@ -1331,7 +1369,7 @@ export default {
     },
     startPhaseImpreg() {
       this.phase = 1;
-
+      this.saveMessage = '';
       this.mods = calculateMods(this.playerOptions);
 
       let bredScore = (this.mods.bred_mod >= 0) ? 0 : Math.abs(this.mods.bred_mod);
@@ -1483,9 +1521,33 @@ export default {
     tryAgain() {
       window.location.reload(); // TODO: Reload page with saved settings, or do a 'soft reload'
     },
+
+    saveData() {
+      window.localStorage.setItem('playerOptions', JSON.stringify(this.playerOptions));
+      this.saveMessage = '💾 Data Saved 💾';
+    },
+
+    loadData() {
+      const loadedOptions = JSON.parse(window.localStorage.getItem('playerOptions'));
+      if (loadedOptions !== null) {
+        this.playerOptions = loadedOptions;
+        this.saveMessage = '✔ Data Loaded! ✔';
+      } else {
+        this.saveMessage = 'Ain\'t no saved data to load. 🤷';
+      }
+    },
+    clearData() {
+      if (window.localStorage.getItem('playerOptions') === null) {
+        this.saveMessage = 'No saved data to delete. So... done? 🤔';
+      } else {
+        window.localStorage.removeItem('playerOptions');
+        this.saveMessage = 'Saved data deleted. 👋';
+      }
+      this.saveKey += 1;
+    },
   },
   created() {
-    // this.getMessage();
+    // nothing
   },
 };
 </script>
