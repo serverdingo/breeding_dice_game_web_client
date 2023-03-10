@@ -22,6 +22,9 @@ function calculateMods(playerOptions) {
   const bredOptions = playerOptions.bred;
   const breederOptions = playerOptions.breeder;
 
+  const bredTraits = playerOptions.selectedTraits.bred;
+  const breederTraits = playerOptions.selectedTraits.breeder;
+
   if (bredOptions.checkboxes.checked.includes('inHeat')) {
     if (breederOptions.checkboxes.checked.includes('inRut')) {
       bredMod -= dice.roll('2d2').result;
@@ -34,10 +37,11 @@ function calculateMods(playerOptions) {
   }
 
   if (bredOptions.radioGroups.penetrationDepth.selected === 'cervicalPen') {
-    bredMod -= 1;
-    breederMod += 1;
+    bredMod -= bredTraits.includes('overactiveOvaries') ? 2 : 1;
+    bredMod -= bredTraits.includes('tightCervix') ? 1 : 0;
+    breederMod += breederTraits.includes('deeepInsemination') ? 2 : 1;
   } else if (bredOptions.radioGroups.penetrationDepth.selected === 'floodedOvaries') {
-    bredMod -= 2;
+    bredMod -= bredTraits.includes('overactiveOvaries') ? 3 : 2;
     breederMod += 1;
   }
 
@@ -66,7 +70,8 @@ function calculateMods(playerOptions) {
     bredMod -= 1;
   }
 
-  if (bredOptions.checkboxes.checked.includes('differentSpecies')) {
+  if (bredOptions.checkboxes.checked.includes('differentSpecies')
+      && !(bredTraits.includes('corruptedWomb'))) {
     bredMod += 1;
   }
 
@@ -96,7 +101,8 @@ function calculateMods(playerOptions) {
     breederMod += 1;
   }
 
-  breederMod += parseInt(breederOptions.ranges.virilityBonus.value, 10);
+  const virilityMod = breederTraits.includes('potentVirility') ? 2 : 1;
+  breederMod += parseInt(breederOptions.ranges.virilityBonus.value, 10) * virilityMod;
 
   for (let i = 0; i < parseInt(breederOptions.ranges.virilityAids.value, 10); i += 1) {
     breederMod += dice.roll('1d4').result;
@@ -104,6 +110,17 @@ function calculateMods(playerOptions) {
 
   if (breederOptions.checkboxes.checked.includes('lowSpermCount')) {
     breederMod -= 1;
+  }
+
+  // Traits
+
+  if (bredTraits.includes('cluelessBreeder')) {
+    breederMod += 1;
+    bredMod -= 1;
+  }
+
+  if (bredTraits.includes('corruptedOvaries')) {
+    breederMod += 2;
   }
 
   return {
@@ -137,10 +154,10 @@ function getNumEggs(playerOptions, playerRolls) {
   const bredOptions = playerOptions.bred;
   const breederOptions = playerOptions.breeder;
 
-  const dice = new Roll();
+  const bredTraits = playerOptions.selectedTraits.bred;
+  const breederTraits = playerOptions.selectedTraits.breeder;
 
-  // Initial 1d3 eggs
-  eggCount = addEggs('1d3', playerOptions, eggCount, dice);
+  const dice = new Roll();
 
   const matchups = Object.keys(playerRolls);
 
@@ -148,6 +165,9 @@ function getNumEggs(playerOptions, playerRolls) {
   let bredDoubleCritFails = 0;
   let breederCrits = 0;
   let breederDoubleCrits = 0;
+
+  // All d3 become d6 with overactiveOvaries bred trait
+  const defaultDice = bredTraits.includes('overactiveOvaries') ? 6 : 3;
 
   for (let i = 0; i < matchups.length; i += 1) {
     // Tally up crits for bred/breeder. Double crits count as both
@@ -164,16 +184,29 @@ function getNumEggs(playerOptions, playerRolls) {
     } else if (playerRolls[matchups[i]].breederCrit === 'single') {
       breederCrits += 1;
     }
+
+    // if domineeringSeed is active, add 1d3 eggs per nat 10 for breeder
+    if (breederTraits.includes('domineeringSeed')
+        && playerRolls[matchups[i]].breederValue >= 10) {
+      eggCount += addEggs(`1d${defaultDice}`, playerOptions, eggCount, dice);
+    }
   }
 
+  // Add initial eggs, 1d3 by default
+  const initialEggs = bredTraits.includes('corruptedOvaries')
+    ? `1d${breederCrits + defaultDice}` : `1d${defaultDice}`;
+  eggCount += addEggs(initialEggs, playerOptions, eggCount, dice);
+
   for (let i = 0; i < bredCritFails; i += 1) {
-    // Add 1d3 eggs per bred crit fail
-    eggCount = addEggs('1d3', playerOptions, eggCount, dice);
+    // Add 1d3 eggs per bred crit fail, 2d3 if natBornMilf trait
+    eggCount = bredTraits.includes('natBornMilf')
+      ? addEggs(`2d${defaultDice}`, playerOptions, eggCount, dice)
+      : addEggs(`1d${defaultDice}`, playerOptions, eggCount, dice);
   }
 
   // Add 1d3 eggs for breeder's barbed cock
   eggCount = breederOptions.checkboxes.checked.includes('hasBarbs')
-    ? addEggs('1d3', playerOptions, eggCount, dice) : eggCount;
+    ? addEggs(`1d${defaultDice}`, playerOptions, eggCount, dice) : eggCount;
 
   // Add ovuDrugsValue-d2 eggs
   const ovuDrugsValue = parseInt(bredOptions.ranges.ovulationDrugs.value, 10);
@@ -190,7 +223,7 @@ function getNumEggs(playerOptions, playerRolls) {
   // Add 10d3 eggs if 5 or more bred crit fail and 5 or more breeder crit
   if (((bredCritFails + bredDoubleCritFails) >= 5)
       && ((breederCrits + breederDoubleCrits) >= 5)) {
-    eggCount = addEggs('10d3', playerOptions, eggCount, dice);
+    eggCount = addEggs(`10d${defaultDice}`, playerOptions, eggCount, dice);
   }
 
   if (bredDoubleCritFails < 5) {
@@ -209,8 +242,17 @@ function getNumEggs(playerOptions, playerRolls) {
   return eggCount;
 }
 
-function fertEgg(diceRoller, fertMod, babiesToAdd) {
-  const naturalRoll = diceRoller.roll('1d100').result;
+function fertEgg(diceRoller, fertMod, babiesToAdd, traits) {
+  let naturalRoll = diceRoller.roll('1d100').result;
+  // +2 to fertilization roll if tightCervix bred trait
+  naturalRoll = traits.bred.includes('tightCervix')
+    ? Math.min((naturalRoll + 2), 100) : naturalRoll;
+
+  const guaranteedMultipleCheck = traits.breeder.includes('potentVirility')
+    ? 90 : 100;
+  const multipleCheck = traits.breeder.includes('potentVirility')
+    ? 80 : 90;
+
   let babiesToAddCopy = babiesToAdd;
   if (naturalRoll + fertMod >= 0) {
     // If we get a positive value for roll + fertMod, thassa babby!
@@ -221,18 +263,18 @@ function fertEgg(diceRoller, fertMod, babiesToAdd) {
     });
   }
 
-  if ((naturalRoll >= 90) && (naturalRoll < 100)) {
-    // Natural roll of 90+ - chance for extra baby!
+  if ((naturalRoll >= multipleCheck) && (naturalRoll < guaranteedMultipleCheck)) {
+    // Natural roll of multipleCheck+ - chance for extra baby!
 
-    babiesToAddCopy = fertEgg(diceRoller, fertMod, babiesToAddCopy);
-  } else if (naturalRoll >= 100) {
-    // Naturall roll of 100 - extra baby guaranteed, and try for another!
+    babiesToAddCopy = fertEgg(diceRoller, fertMod, babiesToAddCopy, traits);
+  } else if (naturalRoll >= guaranteedMultipleCheck) {
+    // Naturall roll of guaranteedMultipleCheck - extra baby guaranteed, and try for another!
     babiesToAddCopy.push({
       gender: diceRoller.roll('1d3').result,
       species: diceRoller.roll('1d3').result,
       natRoll: naturalRoll,
     });
-    babiesToAddCopy = fertEgg(diceRoller, fertMod, babiesToAddCopy);
+    babiesToAddCopy = fertEgg(diceRoller, fertMod, babiesToAddCopy, traits);
   }
   return babiesToAddCopy;
 }
@@ -243,6 +285,8 @@ function getBabies(playerOptions, playerRolls, eggs) {
 
   const bredOptions = playerOptions.bred;
   const breederOptions = playerOptions.breeder;
+
+  const bredTraits = playerOptions.selectedTraits.bred;
 
   const prevImpreg = parseInt(bredOptions.ranges.previousImpregnations.value, 10);
 
@@ -294,7 +338,8 @@ function getBabies(playerOptions, playerRolls, eggs) {
   }
 
   // -10 if different species, +10 if same
-  fertMod = bredOptions.checkboxes.checked.includes('differentSpecies')
+  fertMod = (bredOptions.checkboxes.checked.includes('differentSpecies')
+             && !(bredTraits.includes('corruptedWomb')))
     ? (fertMod - 10) : (fertMod + 10);
 
   // -10 for every undefeated contraceptive
@@ -313,9 +358,63 @@ function getBabies(playerOptions, playerRolls, eggs) {
   fertMod = bredOptions.checkboxes.checked.includes('lowFertility')
     ? (fertMod - 10) : fertMod;
 
-  const babies = [];
   const dice = new Roll();
 
+  // B-B-B-Bonus crits from naturalBornStud are factored in!
+  const matchups = Object.keys(playerRolls);
+  let breederCrits = 0;
+  let breederDoubleCrits = 0;
+  let breederBonusCrits = 0;
+
+  for (let i = 0; i < matchups.length; i += 1) {
+    // Double crits do NOT double dip for fert phase
+    if (playerRolls[matchups[i]].breederCrit === 'double') {
+      breederDoubleCrits += 1;
+    } else if (playerRolls[matchups[i]].breederCrit === 'single') {
+      breederCrits += 1;
+    }
+    // This will only ever be true if naturalBornStud is active
+    if (playerRolls[matchups[i]].breederBonusCrit) {
+      breederBonusCrits += 1;
+    }
+  }
+
+  // +5 per crit/bonus crit
+  fertMod += ((breederCrits + breederBonusCrits) * 5);
+  // +8, 14, 18, 20, 25 + SpECiaL bOnUS for doubleCrits
+  // I see the pattern, but I'm too lazy to do some recursive bullshit
+  let doubleCritMod = 0;
+
+  switch (breederDoubleCrits) {
+    case 1:
+      doubleCritMod = 8;
+      break;
+    case 2:
+      doubleCritMod = 14;
+      break;
+    case 3:
+      doubleCritMod = 18;
+      break;
+    case 4:
+      doubleCritMod = 20;
+      break;
+    case 5:
+      doubleCritMod = 25;
+      break;
+    default:
+      doubleCritMod = 0;
+  }
+
+  fertMod += doubleCritMod;
+
+  // TODO: Male 5/5 Doublecrit Strikes / Female Fails: +25, then either:
+  //    roll 3d50 rather than 1d100
+  //    or
+  //    double available eggs
+  // (Overrides single double crits, so +25 max.
+  // Eggs can only be doubled once, if not done already in ovulation check.)
+
+  const babies = [];
   const eggsCopy = eggs;
   eggsCopy.eggList = {};
   // ok... it's time for the big chungus loop
@@ -324,7 +423,7 @@ function getBabies(playerOptions, playerRolls, eggs) {
     let babiesToAdd = [];
     let numBabiesAdded = 0;
 
-    babiesToAdd = fertEgg(dice, fertMod, babiesToAdd);
+    babiesToAdd = fertEgg(dice, fertMod, babiesToAdd, playerOptions.selectedTraits);
 
     numBabiesAdded = babiesToAdd.length;
     eggsCopy.eggList[`babiesFromEgg${i}`] = numBabiesAdded;

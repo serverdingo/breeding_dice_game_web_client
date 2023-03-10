@@ -185,7 +185,7 @@
               |_|  |_|  \_\/_/    \_\_____|  |_| |_____/ --->
       <b-card no-body class="mb-1" id="traitcard">
         <b-card-header header-tag="header" class="p-1" role="tab">
-          <b-button disabled block variant="info"
+          <b-button block variant="info"
           v-b-toggle.accordion-3 id="traitbutton">Choose Traits</b-button>
         </b-card-header>
         <!-- TODO: add traits functionality -->
@@ -755,41 +755,32 @@ export default {
           {
             name: 'Natural Born Milf',
             traitId: 'natBornMilf',
-            description: 'During initial pregnancy check, crit fails are counted as 2\'s or '
-            + 'lower (instead of 1\'s), and for ovulation check count crit fails as adding 2d3 eggs instead of 1d3',
+            description: 'During initial pregnancy check, crit fails are counted as 2\'s or lower (instead of 1\'s), and for ovulation check count crit fails as adding 2d3 eggs instead of 1d3',
           },
           {
             name: 'Clueless Breeder',
             traitId: 'cluelessBreeder',
-            description: 'During Initial pregnancy check, add a +1 modifier to the '
-            + 'breeder\'s rolls and a -1 modifier to the bred\'s rolls',
+            description: 'During Initial pregnancy check, add a +1 modifier to the breeder\'s rolls and a -1 modifier to the bred\'s rolls.',
           },
           {
             name: 'Corrupted Womb',
             traitId: 'corruptedWomb',
-            description: 'During Initial pregnancy check, ignore modifier\'s for different'
-            + ' species for both bred and breeder. Also, bred must re-roll any modified results over 1 during '
-            + 'initial pregnancy check',
+            description: 'During Initial pregnancy check, ignore modifiers for different species for both bred and breeder. Also, bred must re-roll any modified results over 1 during initial pregnancy check',
           },
           {
             name: 'Corrupted Ovaries',
             traitId: 'corruptedOvaries',
-            description: 'During initial pregnancy check, adds +2 to breeder\'s rolls. Every '
-            + 'crit from your opponent adds an extra side of die to the ovulation check (IE 3'
-            + ' crits is d6, 5 crits is d8). Litter size may be capped at a number determined'
-            + ' by the breeder and distributed among multiple litters.',
+            description: 'During initial pregnancy check, adds +2 to breeder\'s rolls. Every crit from the breeder adds an extra side of die to the ovulation check (IE 3 crits is d6, 5 crits is d8). Litter size may be capped at a number determined by the breeder and distributed among multiple litters.',
           },
           {
             name: 'Overactive Ovaries',
             traitId: 'overactiveOvaries',
-            description: 'During Initial pregnancy check, bred gains a -1 roll modifier on all rolls'
-            + ' for cervical penetration. During Ovulation check, roll d6\'s instead of d3\'s for egg count.',
+            description: 'During Initial pregnancy check, bred gains an additional -1 roll modifier on all rolls if there\'s cervical penetration or flooded ovaries. During Ovulation check, roll d6\'s instead of d3\'s for egg count.',
           },
           {
             name: 'Tight Cervix',
             traitId: 'tightCervix',
-            description: 'If cervical penetration occurs, subtract -1 from your rolls. During '
-            + 'fertilization check, breeder gains +2 to rolls.',
+            description: 'If cervical penetration occurs, an additional -1 is taken from bred\'s rolls during impregnation check. In addition, during fertilization check, breeder gains +2 to rolls.',
           },
         ],
         breederTraits:
@@ -797,30 +788,22 @@ export default {
           {
             name: 'Natural Born Stud',
             traitId: 'naturalBornStud',
-            description: 'During initial pregnancy check, add +2 to all non crit rolls for the breeder. And on '
-            + 'any crit roll, roll another die (Extra crits for Fertilization check)',
+            description: 'During initial pregnancy check, add +2 to all non crit rolls for the breeder. And on any crit roll, roll another die (Extra crits for Fertilization check)',
           },
           {
             name: 'Domineering Seed',
             traitId: 'domineeringSeed',
-            description: 'During initial pregnancy check, on any crit roll, subtract the amount'
-            + ' over 10 for the breeder\'s result from the bred\'s result. Any natural roll of 10'
-            + ' also adds 1d3 eggs to opponent\'s ovulation check',
+            description: 'During initial pregnancy check, on any crit roll, subtract the amount over 10 for the breeder\'s result from the bred\'s result. Any natural roll of 10 also adds 1d3 eggs to opponent\'s ovulation check',
           },
           {
             name: 'Deep Insemination',
             traitId: 'deepInsemination',
-            description: 'During initial pregnancy check, have a +2 modifier instead of +1 for'
-            + ' cervical penetration. Every time you crit during initial pregnancy check, you '
-            + 'may have your opponent reroll their result for that check',
+            description: 'During initial pregnancy check, have a +2 modifier instead of +1 for cervical penetration. Every time you crit during initial pregnancy check, bred will reroll their opposing roll and take the lower for that check',
           },
           {
             name: 'Potent Virility',
             traitId: 'potentVirility',
-            description: 'During initial pregnancy check, have a +2 modifier instead of +1 for '
-            + 'Virility. During Fertilization check, instead bonus rolling for twins, any natural'
-            + ' 90+ is automatically a twin, with a bonus roll offering a chance at triplets'
-            + 'according to normal rules.',
+            description: 'During initial pregnancy check, \'Virility Bonus\' grants a +2 modifier per unit instead of +1. During Fertilization check, isntead of only occurring on a natural 100, any natural 90+ is now automatically a twin - and the bonus roll for a chance at twins or more is now attempted on a natural roll of 80+ instead of 90+.',
           },
         ],
         secretTraits: [
@@ -925,8 +908,8 @@ export default {
               helpText: 'Conceiving is a bit easier if you give that spunk a one way trip to those egg factories.',
               options: [
                 { text: 'Normal', value: 'normal' },
-                { text: 'Flooded Overies', value: 'floodedOvaries' },
                 { text: 'Cervical Penetration', value: 'cervicalPen' },
+                { text: 'Flooded Ovaries', value: 'floodedOvaries' },
               ],
               selected: 'normal',
             },
@@ -1367,6 +1350,19 @@ export default {
       this.playerRolls.diceRoll4.breederValue = dice.roll();
       this.playerRolls.diceRoll5.breederValue = dice.roll();
     },
+    rerollKeepLowest(originalRoll) {
+      const dice = {
+        sides: 10,
+        roll() {
+          const randomNumber = Math.floor(Math.random() * this.sides) + 1;
+          return randomNumber;
+        },
+      };
+      const reroll = dice.roll();
+      return (reroll >= originalRoll)
+        ? originalRoll
+        : reroll;
+    },
     startPhaseImpreg() {
       this.phase = 1;
       this.saveMessage = '';
@@ -1393,25 +1389,62 @@ export default {
       let bredTotalWins = 0;
       let breederTotalWins = 0;
 
+      const bredTraits = this.playerOptions.selectedTraits.bred;
+      const breederTraits = this.playerOptions.selectedTraits.breeder;
+
       for (let i = 0; i < matchups.length; i += 1) {
         this.playerRolls[matchups[i]].bredCalcValue = this.playerRolls[matchups[i]].bredValue
           + this.mods.bred_mod;
         this.playerRolls[matchups[i]].breederCalcValue = this.playerRolls[matchups[i]].breederValue
           + this.mods.breeder_mod;
 
-        const bred = this.playerRolls[matchups[i]].bredCalcValue;
-        const breeder = this.playerRolls[matchups[i]].breederCalcValue;
+        let bred = this.playerRolls[matchups[i]].bredCalcValue;
+        let breeder = this.playerRolls[matchups[i]].breederCalcValue;
 
         let winner = 'tie';
         let bredCrit = 'none';
         let breederCrit = 'none';
+        let breederBonusCrit = false;
+
+        // If breeder didn't crit - naturalBornStud procs
+        if (breederTraits.includes('naturalBornStud') && breeder < 10) {
+          breeder += 2;
+        }
+
+        // Reroll bred's roll if modded value is over 1 and has corruptedWomb - keep lowest
+        // TODO: add flourish to "VS." results indicating a reroll happened
+        if (bredTraits.includes('corruptedWomb') && bred > 1) {
+          const reroll = this.rerollKeepLowest(this.playerRolls[matchups[i]].bredValue);
+          bred = reroll + this.mods.bred_mod;
+          // I have no idea if this is pass by reference or value, cuz JS,
+          // so set it again just in case...
+          this.playerRolls[matchups[i]].bredCalcValue = bred;
+        }
+
+        // Reroll bred's roll if breeder crit and has deepInsemination
+        // TODO: add flourish to "VS." results indicating a reroll happened
+        if (breederTraits.includes('deepInsemination') && breeder >= 10) {
+          const reroll = this.rerollKeepLowest(this.playerRolls[matchups[i]].bredValue);
+          bred = reroll + this.mods.bred_mod;
+          // I have no idea if this is pass by reference or value, cuz JS,
+          // so set it again just in case...
+          this.playerRolls[matchups[i]].bredCalcValue = bred;
+        }
+
+        // If domineeringSeed is active, subtract anything over 10 for breeder from bred
+        if (breederTraits.includes('domineeringSeed') && breeder > 10) {
+          bred -= breeder - 10;
+          this.playerRolls[matchups[i]].bredCalcValue = bred;
+        }
 
         if (bred !== breeder) {
           winner = (bred > breeder) ? 'bred' : 'breeder';
           if (breeder >= 10) { // TODO: make these global constants for easy tweaking
             breederCrit = (breeder >= 20) ? 'double' : 'single';
+            // Grant a bonus crit if naturalBornStud is active
+            breederBonusCrit = breederTraits.includes('naturalBornStud');
           }
-          if (bred <= 1) {
+          if ((bredTraits.includes('natBornMilf') && bred <= 2) || bred <= 1) {
             bredCrit = (bred <= -10) ? 'double' : 'single';
           }
         }
@@ -1425,6 +1458,7 @@ export default {
         this.playerRolls[matchups[i]].winner = winner;
         this.playerRolls[matchups[i]].bredCrit = bredCrit;
         this.playerRolls[matchups[i]].breederCrit = breederCrit;
+        this.playerRolls[matchups[i]].breederBonusCrit = breederBonusCrit;
       }
       if (bredTotalWins !== breederTotalWins) {
         this.overallWinner = (bredTotalWins > breederTotalWins) ? 'bred' : 'breeder';
@@ -1442,7 +1476,6 @@ export default {
       this.phase = 3;
       // I'm pretty sure this variable name has put me on some kind of watch list
       const eggsAndBabies = getBabies(this.playerOptions, this.playerRolls, this.eggs);
-      console.log(eggsAndBabies);
       this.eggs = eggsAndBabies.updatedEggs;
       this.babies = eggsAndBabies.babiesList;
       this.fertilizeChance = eggsAndBabies.fertChance;
