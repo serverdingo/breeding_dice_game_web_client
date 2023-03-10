@@ -14,99 +14,98 @@
 const Roll = require('roll');
 
 function calculateMods(playerOptions) {
-  if (playerOptions === 'test') {
-    return 'test';
-  }
-
   const dice = new Roll();
 
   let bredMod = 0;
   let breederMod = 0;
 
-  if (playerOptions.bred_checked.includes('inHeat')) {
-    if (playerOptions.breeder_checked.includes('inRut')) {
+  const bredOptions = playerOptions.bred;
+  const breederOptions = playerOptions.breeder;
+
+  if (bredOptions.checkboxes.checked.includes('inHeat')) {
+    if (breederOptions.checkboxes.checked.includes('inRut')) {
       bredMod -= dice.roll('2d2').result;
       breederMod += dice.roll('2d2').result;
     } else {
       bredMod -= 2;
     }
-  } else if (playerOptions.breeder_checked.includes('inRut')) {
+  } else if (breederOptions.checkboxes.checked.includes('inRut')) {
     breederMod += 2;
   }
 
-  if (playerOptions.bred_penetrationDepthSelected === 'cervicalPen') {
+  if (bredOptions.radioGroups.penetrationDepth.selected === 'cervicalPen') {
     bredMod -= 1;
     breederMod += 1;
-  } else if (playerOptions.bred_penetrationDepthSelected === 'floodedOvaries') {
+  } else if (bredOptions.radioGroups.penetrationDepth.selected === 'floodedOvaries') {
     bredMod -= 2;
     breederMod += 1;
   }
 
   // Doing bred mods
 
-  bredMod -= parseInt(playerOptions.bred_fertilityBonusValue, 10);
+  bredMod -= parseInt(bredOptions.ranges.fertilityBonus.value, 10);
 
-  for (let i = 0; i < parseInt(playerOptions.bred_fertilityAidsValue, 10); i += 1) {
+  for (let i = 0; i < parseInt(bredOptions.ranges.fertilityAids.value, 10); i += 1) {
     bredMod -= dice.roll('1d4').result;
   }
 
-  bredMod -= parseInt(playerOptions.bred_previousImpregnationsValue, 10);
-  bredMod -= parseInt(playerOptions.bred_numberOrgasmsValue, 10);
+  bredMod -= parseInt(bredOptions.ranges.previousImpregnations.value, 10);
+  bredMod -= parseInt(bredOptions.ranges.numberOrgasms.value, 10);
 
-  if (playerOptions.bred_positionSelected === 'doggyStyle') {
+  if (bredOptions.radioGroups.sexPosition.selected === 'doggyStyle') {
     bredMod -= 1;
-  } else if (playerOptions.bred_positionSelected === 'matingPress') {
+  } else if (bredOptions.radioGroups.sexPosition.selected === 'matingPress') {
     bredMod -= 2;
   }
 
-  if (playerOptions.bred_checked.includes('desireForImpreg')) {
+  if (bredOptions.checkboxes.checked.includes('desireForImpreg')) {
     bredMod -= 1;
   }
 
-  if (playerOptions.bred_checked.includes('arousedBeforeSex')) {
+  if (bredOptions.checkboxes.checked.includes('arousedBeforeSex')) {
     bredMod -= 1;
   }
 
-  if (playerOptions.bred_checked.includes('differentSpecies')) {
+  if (bredOptions.checkboxes.checked.includes('differentSpecies')) {
     bredMod += 1;
   }
 
-  if (playerOptions.bred_checked.includes('lowFertility')) {
+  if (bredOptions.checkboxes.checked.includes('lowFertility')) {
     bredMod += 2;
   }
 
   // Breeder mods
 
-  if (playerOptions.breeder_checked.includes('hasKnot')) {
+  if (breederOptions.checkboxes.checked.includes('hasKnot')) {
     breederMod += 1;
   }
 
-  if (playerOptions.breeder_checked.includes('hasBarbs')) {
+  if (breederOptions.checkboxes.checked.includes('hasBarbs')) {
     breederMod += 1;
   }
 
-  if (playerOptions.breeder_checked.includes('extendedPenetration')) {
+  if (breederOptions.checkboxes.checked.includes('extendedPenetration')) {
     breederMod += 1;
   }
 
-  if (playerOptions.breeder_checked.includes('cameMoreThanOnce')) {
+  if (breederOptions.checkboxes.checked.includes('cameMoreThanOnce')) {
     breederMod += 1;
   }
 
-  if (playerOptions.breeder_checked.includes('extraFluids')) {
+  if (breederOptions.checkboxes.checked.includes('extraFluids')) {
     breederMod += 1;
   }
 
-  breederMod += parseInt(playerOptions.breeder_virilityBonusValue, 10);
+  breederMod += parseInt(breederOptions.ranges.virilityBonus.value, 10);
 
-  for (let i = 0; i < parseInt(playerOptions.breeder_virilityAidsValue, 10); i += 1) {
+  for (let i = 0; i < parseInt(breederOptions.ranges.virilityAids.value, 10); i += 1) {
     breederMod += dice.roll('1d4').result;
   }
 
-  if (playerOptions.breeder_checked.includes('lowSpermCount')) {
+  if (breederOptions.checkboxes.checked.includes('lowSpermCount')) {
     breederMod -= 1;
   }
-  console.log(bredMod);
+
   return {
     bred_mod: bredMod,
     breeder_mod: breederMod,
@@ -114,8 +113,11 @@ function calculateMods(playerOptions) {
 }
 
 function addEggs(amount, playerOptions, currentEggCount, diceRoller) {
-  const lowFertMod = playerOptions.bred_checked.includes('lowFertility') ? -1 : 0;
-  const heatMod = parseInt(playerOptions.bred_checked.includes('inHeat'), 10);
+  const bredOptions = playerOptions.bred;
+  // const breederOptions = playerOptions.breeder;
+
+  const lowFertMod = bredOptions.checkboxes.checked.includes('lowFertility') ? -1 : 0;
+  const heatMod = parseInt(bredOptions.checkboxes.checked.includes('inHeat'), 10);
 
   let addedEggs = (typeof amount === 'string') ? diceRoller.roll(amount).result : amount;
 
@@ -131,6 +133,9 @@ function addEggs(amount, playerOptions, currentEggCount, diceRoller) {
 function getNumEggs(playerOptions, playerRolls) {
   // let eggLog = '';
   let eggCount = 0;
+
+  const bredOptions = playerOptions.bred;
+  const breederOptions = playerOptions.breeder;
 
   const dice = new Roll();
 
@@ -167,17 +172,17 @@ function getNumEggs(playerOptions, playerRolls) {
   }
 
   // Add 1d3 eggs for breeder's barbed cock
-  eggCount = playerOptions.breeder_checked.includes('hasBarbs')
+  eggCount = breederOptions.checkboxes.checked.includes('hasBarbs')
     ? addEggs('1d3', playerOptions, eggCount, dice) : eggCount;
 
   // Add ovuDrugsValue-d2 eggs
-  const ovuDrugsValue = parseInt(playerOptions.bred_ovulationDrugsValue, 10);
+  const ovuDrugsValue = parseInt(bredOptions.ranges.ovulationDrugs.value, 10);
   eggCount = ovuDrugsValue > 0
     ? addEggs(`${ovuDrugsValue}d2`, playerOptions, eggCount, dice)
     : eggCount;
 
   // Add 1d-bredOrgasms eggs
-  const bredOrgasms = parseInt(playerOptions.bred_numberOrgasmsValue, 10);
+  const bredOrgasms = parseInt(bredOptions.ranges.numberOrgasms.value, 10);
   eggCount = bredOrgasms > 0
     ? addEggs(`1d${bredOrgasms}`, playerOptions, eggCount, dice)
     : eggCount;
@@ -236,7 +241,10 @@ function getBabies(playerOptions, playerRolls, eggs) {
   // Base fert mod is -90, leaving 10% fert chance
   let fertMod = -90;
 
-  const prevImpreg = parseInt(playerOptions.bred_previousImpregnationsValue, 10);
+  const bredOptions = playerOptions.bred;
+  const breederOptions = playerOptions.breeder;
+
+  const prevImpreg = parseInt(bredOptions.ranges.previousImpregnations.value, 10);
 
   // I think this may be wrong... my old code references prevImpreg
   // but I wrote "roll win beyond second for the stud" in the logs.
@@ -247,20 +255,20 @@ function getBabies(playerOptions, playerRolls, eggs) {
   }
 
   // +10 for knot
-  fertMod = playerOptions.breeder_checked.includes('hasKnot')
+  fertMod = breederOptions.checkboxes.checked.includes('hasKnot')
     ? (fertMod + 10) : fertMod;
 
   // +10 for barbs
-  fertMod = playerOptions.breeder_checked.includes('hasBarbs')
+  fertMod = breederOptions.checkboxes.checked.includes('hasBarbs')
     ? (fertMod + 10) : fertMod;
 
   // +10 for flooded ovaries or cervical pen
-  const penDepth = playerOptions.bred_penetrationDepthSelected;
+  const penDepth = bredOptions.radioGroups.penetrationDepth.selected;
   fertMod = (penDepth !== 'normal') ? (fertMod + 10) : fertMod;
 
   // +10 for every bred/breeder orgasm beyond first
-  const bredOrgasms = parseInt(playerOptions.bred_numberOrgasmsValue, 10);
-  const breederOrgasms = parseInt(playerOptions.breeder_numberOrgasmsValue, 10);
+  const bredOrgasms = parseInt(bredOptions.ranges.numberOrgasms.value, 10);
+  const breederOrgasms = parseInt(breederOptions.ranges.numberOrgasms.value, 10);
 
   fertMod = (bredOrgasms > 1) ? (fertMod + (10 * (bredOrgasms - 1)))
     : fertMod;
@@ -268,7 +276,7 @@ function getBabies(playerOptions, playerRolls, eggs) {
     : fertMod;
 
   // +5/10/15 for paunch/preg/overflow cumflation respectively
-  const cumflation = playerOptions.breeder_cumflationSelected;
+  const cumflation = breederOptions.radioGroups.cumflation.selected;
   if (cumflation !== 'none') {
     if (cumflation === 'paunch') {
       fertMod += 5;
@@ -279,30 +287,30 @@ function getBabies(playerOptions, playerRolls, eggs) {
   }
 
   // +5/10 for dripping/constant stream wetness respectively
-  const wetness = playerOptions.bred_wetnessSelected;
+  const wetness = bredOptions.radioGroups.wetness.selected;
   if (wetness !== 'none') {
     fertMod = (wetness === 'dripping') ? (fertMod + 5)
       : (fertMod + 10);
   }
 
   // -10 if different species, +10 if same
-  fertMod = playerOptions.bred_checked.includes('differentSpecies')
+  fertMod = bredOptions.checkboxes.checked.includes('differentSpecies')
     ? (fertMod - 10) : (fertMod + 10);
 
   // -10 for every undefeated contraceptive
-  const undefContra = parseInt(playerOptions.breeder_undefeatedContraceptivesValue, 10);
+  const undefContra = parseInt(breederOptions.ranges.undefeatedContraceptives.value, 10);
   fertMod = undefContra > 0 ? (fertMod - (10 * undefContra)) : fertMod;
 
   // -1 for every defeated contraceptive
-  const defContra = parseInt(playerOptions.breeder_defeatedContraceptivesValue, 10);
+  const defContra = parseInt(breederOptions.ranges.defeatedContraceptives.value, 10);
   fertMod = defContra > 0 ? (fertMod - (1 * defContra)) : fertMod;
 
   // +10 for every extra fert level
-  const extraFert = parseInt(playerOptions.bred_fertilityBonusValue, 10);
+  const extraFert = parseInt(bredOptions.ranges.fertilityBonus.value, 10);
   fertMod = (extraFert > 0) ? (fertMod + (10 * extraFert)) : fertMod;
 
   // -10 for low fert
-  fertMod = playerOptions.bred_checked.includes('lowFertility')
+  fertMod = bredOptions.checkboxes.checked.includes('lowFertility')
     ? (fertMod - 10) : fertMod;
 
   const babies = [];
