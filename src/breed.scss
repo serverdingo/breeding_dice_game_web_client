@@ -1,0 +1,13 @@
+html {
+  color-scheme: dark;
+}
+
+body {
+  color: gray("100");
+  background-color: theme-color("dark");
+}
+
+footer {
+  color: gray("100");
+  background-color: theme-color("dark");
+}

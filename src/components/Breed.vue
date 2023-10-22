@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <h1 class="text-center">Serv's Breeding Dice Game Thing</h1>
+  <div class="container" >
+    <h1 class="text-center" >Serv's Breeding Dice Game Thing</h1>
     <br/>
     <b-collapse id="accordion-settings" visible accordion="main-accordion" role="tabpanel">
     <h2 class="text-center">1. Set your settings</h2>
@@ -13,7 +13,7 @@
              |  _ <|  _  /|  __| | |  | |
              | |_) | | \ \| |____| |__| |
              |____/|_|  \_\______|_____/ -->
-      <b-card w-25 no-body class="mb-1">
+      <b-card w-25 no-body class="mb-1" text-variant="white" bg-variant="dark">
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button block v-b-toggle.accordion-1 variant="primary">Bred Options</b-button>
         </b-card-header>
@@ -97,7 +97,7 @@
            |  _ <|  _  /|  __| |  __| | |  | |  __| |  _  /
            | |_) | | \ \| |____| |____| |__| | |____| | \ \
            |____/|_|  \_\______|______|_____/|______|_|  \_\ -->
-      <b-card no-body class="mb-1">
+      <b-card no-body class="mb-1" text-variant="white" bg-variant="dark">
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button block v-b-toggle.accordion-2 variant="danger">Breeder Options</b-button>
         </b-card-header>
@@ -183,7 +183,7 @@
               | |  |  _  /   / /\ \   | |    | |  \___ \
               | |  | | \ \  / ____ \ _| |_   | |  ____) |
               |_|  |_|  \_\/_/    \_\_____|  |_| |_____/ --->
-      <b-card no-body class="mb-1" id="traitcard">
+      <b-card no-body class="mb-1" id="traitcard" text-variant="white" bg-variant="dark">
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button block variant="info"
           v-b-toggle.accordion-3 id="traitbutton">Choose Traits</b-button>
@@ -198,7 +198,8 @@
           header="Bred Traits"
           header-bg-variant="primary"
           header-text-variant="white"
-          align="center">
+          align="center"
+          text-variant="white" bg-variant="dark">
             <b-row v-for="trait in traits.bredTraits" :key="trait.id">
               <b-col md="auto">
                 <b-icon :id="`help-button-${trait.traitId}`" icon="question-circle-fill"
@@ -222,7 +223,8 @@
           header="Breeder Traits"
           header-bg-variant="danger"
           header-text-variant="white"
-          align="center">
+          align="center"
+          text-variant="white" bg-variant="dark">
             <b-row v-for="trait in traits.breederTraits" :key="trait.id">
               <b-col md="auto">
                 <b-icon :id="`help-button-${trait.traitId}`" icon="question-circle-fill"
@@ -248,15 +250,15 @@
       <b-row class="justify-content-md-center">
         <b-col class="text-center">
           <b-button size="sm" id="initialSaveButton"
-                variant="dark"  @click="saveData">
+                variant="secondary"  @click="saveData">
                 Save Settings
           </b-button>
           <b-button size="sm" id="initialLoadButton"
-                variant="dark"  @click="loadData">
+                variant="secondary"  @click="loadData">
                 Load Settings
           </b-button>
           <b-button size="sm" id="initialClearButton"
-                variant="dark"  @click="clearData">
+                variant="secondary"  @click="clearData">
                 Delete Saved Settings
           </b-button>
         </b-col>
@@ -301,6 +303,7 @@
           header-bg-variant="primary"
           header-text-variant="white"
           align="center"
+          text-variant="white" bg-variant="dark"
         >
           <b-list-group>
             <b-row cols="5">
@@ -318,6 +321,7 @@
           header-bg-variant="danger"
           header-text-variant="white"
           align="center"
+          text-variant="white" bg-variant="dark"
         >
           <b-list-group>
             <b-row cols="5">
@@ -334,7 +338,7 @@
     </div>
     <br>
     <h2 class="text-center">3. <b-button size="lg" id="rollBreederButton"
-              variant="dark"  @click="startPhaseImpreg"
+              variant="secondary"  @click="startPhaseImpreg"
               v-b-toggle.accordion-impreg>
               BREED
             </b-button></h2>
@@ -372,7 +376,8 @@
           header="Bred"
           header-bg-variant="primary"
           header-text-variant="white"
-          class="text-center">
+          class="text-center"
+          text-variant="white" bg-variant="dark">
 
             <b-card-body no-body class="text-center" :id="die.id"
             v-for="(die, idx) in playerRolls" :key="idx">
@@ -387,7 +392,8 @@
           <h4>
           <b-card
             header="VS."
-            class="text-center">
+            class="text-center"
+            text-variant="white" bg-variant="dark">
             <b-card-body no-body class="text-center"
             v-for="(result, idx) in playerRolls" :key="idx">
               <b-row align-h="center">
@@ -412,7 +418,8 @@
         header="Breeder"
         header-bg-variant="danger"
         header-text-variant="white"
-        align="center">
+        align="center"
+        text-variant="white" bg-variant="dark">
 
           <b-card-body no-body class="text-center" :id="die.id"
           v-for="(die, idx) in playerRolls" :key="idx">
@@ -446,7 +453,7 @@
       <b-row class="justify-content-md-center">
         <h2 class="text-center">
           <b-button size="lg" id="rollBreederButton"
-                variant="dark"  @click="tryAgain">
+                variant="secondary"  @click="tryAgain">
                 Try again?
           </b-button>
         </h2>
@@ -487,7 +494,7 @@
           <b-col cols="12" md="auto">
             <h2>
               <b-button size="lg" id="rollBreederButton"
-                    variant="dark"  @click="startPhaseOvu"
+                    variant="secondary"  @click="startPhaseOvu"
                     class="text-center" v-b-toggle.accordion-ovu>
                     Ovulate
               </b-button>
@@ -527,7 +534,8 @@
             <h4>
             <b-card
               header="Egg Tally:"
-              class="text-center">
+              class="text-center"
+              text-variant="white" bg-variant="dark">
               <b-card-body no-body class="text-center">
                 <b-row align-h="center">
                     🥚 <h2><b class="text-danger">{{eggs.count}}</b></h2>&nbsp;eggs! 🥚
@@ -541,7 +549,7 @@
         <b-row class="justify-content-md-center">
           <h2 class="text-center">
             <b-button size="lg" id="tryAgainOvu"
-                  variant="dark"  @click="tryAgain">
+                  variant="secondary"  @click="tryAgain">
                   Try again?
             </b-button>
           </h2>
@@ -565,7 +573,7 @@
           <b-col cols="12" md="auto">
             <h2>
               <b-button size="lg" id="startFinalPhaseButton"
-                    variant="dark"  @click="startFinalPhase"
+                    variant="secondary"  @click="startFinalPhase"
                     class="text-center" v-b-toggle.accordion-final>
                     Fertilize
               </b-button>
@@ -600,7 +608,8 @@
           <h4>
           <b-card
             header="Babies:"
-            class="text-center">
+            class="text-center"
+            text-variant="white" bg-variant="dark">
             <b-card-body no-body class="text-center">
               <b-row align-h="center">
                   Your chance to fertilize an egg was {{fertilizeChance}}%!
@@ -627,7 +636,8 @@
     </b-row>
       <b-row class="justify-content-md-center" v-if="(phase === 3) && (babies.length > 0)">
         <b-col col lg="4">
-          <b-card no-body class="mb-1">
+          <b-card no-body class="mb-1"
+          text-variant="white" bg-variant="dark">
             <b-card-header header-tag="header" class="p-1" role="tab">
               <b-button block v-b-toggle.collapse-gender variant="info">Gender Details</b-button>
             </b-card-header>
@@ -643,7 +653,8 @@
           </b-card>
         </b-col>
         <b-col col lg="4">
-          <b-card no-body class="mb-1">
+          <b-card no-body class="mb-1"
+          text-variant="white" bg-variant="dark">
             <b-card-header header-tag="header" class="p-1" role="tab">
               <b-button block v-b-toggle.collapse-species variant="success">
                 Species Details
@@ -669,7 +680,7 @@
           <b-row class="justify-content-md-center">
             <h2 class="text-center">
               <b-button size="lg" id="goAgainButton"
-                    variant="dark"  @click="tryAgain">
+                    variant="secondary"  @click="tryAgain">
                     Go again?
               </b-button>
             </h2>
@@ -677,7 +688,7 @@
           <b-row class="justify-content-md-center">
             <b-col class="text-center">
               <b-button size="sm" id="finalSaveButton"
-                    variant="dark"  @click="saveData">
+                    variant="secondary"  @click="saveData">
                     Save Settings
               </b-button>
             </b-col>
@@ -695,22 +706,33 @@
   <br/>
   <br/>
   <br/>
-  <footer class="text-center fixed-bottom" v-if="!isMobile()">
-    <b-card>
+  <footer class="text-center fixed-bottom" v-if="!isMobile()" >
+    <b-card text-variant="white" bg-variant="dark">
       <b-card-text>
       <b-row align-h="center">
         <b-col md="auto">
-          <b-icon icon="envelope"></b-icon>
+          <b-icon icon="envelope-fill"></b-icon>
         </b-col>
         <b-col md="auto">
-          Questions/Feedback? <a href="https://www.f-list.net/c/serv/">Send a note!</a> Based on
-          <a href="https://www.f-list.net/c/taji%20amatsukaze/">these rules</a>.
+          Questions/Feedback? <a href="https://www.f-list.net/c/serv/">Send a note!</a>
+        </b-col>
+        <b-col md="auto">
+          <b-icon icon="suit-club-fill"></b-icon>
+        </b-col>
+        <b-col md="auto">
+          Based on <a href="https://www.f-list.net/c/taji%20amatsukaze/">these rules</a>
         </b-col>
         <b-col md="auto">
           <b-icon icon="github"></b-icon>
         </b-col>
         <b-col md="auto">
           <a href="https://github.com/serverdingo/breeding_dice_game_web_client">serverdingo</a>
+        </b-col>
+        <b-col md="auto">
+          <b-icon icon="emoji-sunglasses-fill"></b-icon>
+        </b-col>
+        <b-col md="auto">
+          <a href="https://darkreader.org/">Dark Mode</a>
         </b-col>
       </b-row>
       </b-card-text>
@@ -1136,8 +1158,9 @@ export default {
           height: 450,
           type: 'donut',
           offsetY: -10,
+          foreColor: '#FFFFFF',
         },
-        colors: ['#353638', '#0234c9', '#c96902', '#34c72c', '#c22929', '#d117ce'],
+        colors: ['#aeafb0', '#0234c9', '#c96902', '#34c72c', '#c22929', '#d117ce'],
         labels: ['Unfertilized', 'Singles', 'Twins', 'Triplets', 'Quadruplets', 'Quintuplets+'],
         responsive: [{
           breakpoint: 580,
@@ -1148,6 +1171,10 @@ export default {
             legend: {
               height: 350,
               position: 'bottom',
+              labels: {
+                colors: ['#353638', '#0234c9', '#c96902', '#34c72c', '#c22929', '#d117ce'],
+                useSeriesColors: false,
+              },
             },
           },
         }],
@@ -1159,6 +1186,7 @@ export default {
           height: 350,
           type: 'donut',
           offsetY: -10,
+          foreColor: '#FFFFFF',
         },
         colors: ['#3d81a8', '#a6468a', '#431d8f'],
         labels: ['Males', 'Females', 'Herms'],
@@ -1170,6 +1198,10 @@ export default {
             },
             legend: {
               position: 'bottom',
+              labels: {
+                colors: ['#3d81a8', '#a6468a', '#431d8f'],
+                useSeriesColors: false,
+              },
             },
           },
         }],
@@ -1181,6 +1213,7 @@ export default {
           height: 350,
           type: 'donut',
           offsetY: -10,
+          foreColor: '#FFFFFF',
         },
         colors: ['#002bc7', '#c70007', '#aa02b0'],
         labels: ['Bred\'s', 'Breeder\'s', 'Hybrid'],
@@ -1211,13 +1244,13 @@ export default {
             dataLabels: {
               name: {
                 fontSize: '16px',
-                color: undefined,
+                color: '#ffffff', // change this for bred text color
                 offsetY: 120,
               },
               value: {
                 offsetY: 76,
                 fontSize: '22px',
-                color: undefined,
+                color: '#ffffff',
                 formatter(val) {
                   if (val < 10) {
                     return `${val}% Meh...`;
@@ -1270,13 +1303,13 @@ export default {
             dataLabels: {
               name: {
                 fontSize: '16px',
-                color: undefined,
+                color: '#ffffff',
                 offsetY: 120,
               },
               value: {
                 offsetY: 76,
                 fontSize: '22px',
-                color: undefined,
+                color: '#ffffff',
                 formatter(val) {
                   if (val < 10) {
                     return `${val}% Normie`;
