@@ -311,7 +311,8 @@
             <b-form-input class="w-25 text-center" :id="die.bredId"
             v-for="(die, idx) in playerRolls"
             type="number" :key="idx" :value="die.bredValue" pattern="\d+"
-            min="1" max="10" default="1" oninput="validity.valid&&(value!='')||(value='1')">
+            min="1" max="10" default="1" @change="updateRolls('bred',die,$event)"
+            oninput="validity.valid&&(value!='')||(value='1')">
             </b-form-input></b-row>
           </b-list-group>
           </b-card>
@@ -328,7 +329,8 @@
             <b-form-input class="w-25 text-center" :id="die.breederId"
             v-for="(die, idx) in playerRolls"
             type="number" :key="idx" :value="die.breederValue" pattern="\d+"
-            min="1" max="10" default="1" oninput="validity.valid&&(value!='')||(value='1')">
+            min="1" max="10" default="1" @change="updateRolls('breeder',die,$event)"
+            oninput="validity.valid&&(value!='')||(value='1')">
             </b-form-input>
           </b-row>
           </b-list-group>
@@ -1355,6 +1357,20 @@ export default {
       }
       return false;
     },
+    updateRolls(playerType, roll, event) {
+      // to get linter off my fucking ass
+      const muhRoll = roll;
+      // eslint-disable-next-line
+      const value = event;
+      console.log(value);
+      if (muhRoll) {
+        if (playerType === 'bred') {
+          muhRoll.bredValue = Number(value);
+        } else {
+          muhRoll.breederValue = Number(value);
+        }
+      }
+    },
     rollDiceBred() {
       const dice = {
         sides: 10,
@@ -1363,11 +1379,14 @@ export default {
           return randomNumber;
         },
       };
-      this.playerRolls.diceRoll1.bredValue = dice.roll();
-      this.playerRolls.diceRoll2.bredValue = dice.roll();
-      this.playerRolls.diceRoll3.bredValue = dice.roll();
-      this.playerRolls.diceRoll4.bredValue = dice.roll();
-      this.playerRolls.diceRoll5.bredValue = dice.roll();
+      const rolls = [dice.roll(), dice.roll(), dice.roll(), dice.roll(), dice.roll()];
+      let rollNum = 0;
+      const muhRolls = this.playerRolls;
+      Object.keys(this.playerRolls).forEach(function (key) {
+        const roll = muhRolls[key];
+        roll.bredValue = rolls[rollNum];
+        rollNum += 1;
+      });
     },
     rollDiceBreeder() {
       const dice = {
@@ -1377,11 +1396,14 @@ export default {
           return randomNumber;
         },
       };
-      this.playerRolls.diceRoll1.breederValue = dice.roll();
-      this.playerRolls.diceRoll2.breederValue = dice.roll();
-      this.playerRolls.diceRoll3.breederValue = dice.roll();
-      this.playerRolls.diceRoll4.breederValue = dice.roll();
-      this.playerRolls.diceRoll5.breederValue = dice.roll();
+      const rolls = [dice.roll(), dice.roll(), dice.roll(), dice.roll(), dice.roll()];
+      let rollNum = 0;
+      const muhRolls = this.playerRolls;
+      Object.keys(this.playerRolls).forEach(function (key) {
+        const roll = muhRolls[key];
+        roll.breederValue = rolls[rollNum];
+        rollNum += 1;
+      });
     },
     rerollKeepLowest(originalRoll) {
       const dice = {
@@ -1535,7 +1557,7 @@ export default {
 
         if (this.babies[i].species === 1) {
           speciesCount.bred += 1;
-        } else if (this.babies[i].gender === 2) {
+        } else if (this.babies[i].species === 2) {
           speciesCount.breeder += 1;
         } else {
           speciesCount.hybrid += 1;

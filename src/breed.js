@@ -255,6 +255,8 @@ function fertEgg(diceRoller, fertMod, babiesToAdd, traits) {
 
   let babiesToAddCopy = babiesToAdd;
   if (naturalRoll + fertMod >= 0) {
+    /** @todo add new trait to lean more closely toward breeder's or bred's species */
+    /** @todo add toggle to enforce all male/female/intersex etc */
     // If we get a positive value for roll + fertMod, thassa babby!
     babiesToAddCopy.push({
       gender: diceRoller.roll('1d3').result,
@@ -417,8 +419,11 @@ function getBabies(playerOptions, playerRolls, eggs) {
   const babies = [];
   const eggsCopy = eggs;
   eggsCopy.eggList = {};
-  // ok... it's time for the big chungus loop
-  // this is easily the most computation-heavy bit if many eggs
+
+  /**  ok... it's time for the big chungus loop
+  * this is easily the most computation-heavy bit if many eggs
+  * @todo maybe replace with rpg dice roller js library? https://dice-roller.github.io/
+  */
   for (let i = 0; i < eggs.count; i += 1) {
     let babiesToAdd = [];
     let numBabiesAdded = 0;
