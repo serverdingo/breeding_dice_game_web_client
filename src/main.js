@@ -1,6 +1,7 @@
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import Vue from 'vue';
 import VueApexCharts from 'vue-apexcharts';
+import VModal from 'vue-js-modal';
 import App from './App.vue';
 import router from './router';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -11,6 +12,7 @@ Vue.mixin(titleMixin);
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
+Vue.use(VModal);
 Vue.use(VueApexCharts);
 Vue.component('apexchart', VueApexCharts);
 

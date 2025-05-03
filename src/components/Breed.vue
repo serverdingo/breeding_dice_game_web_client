@@ -1,6 +1,7 @@
 <template>
   <div class="container" >
     <h1 class="text-center" >Serv's Breeding Dice Game Thing</h1>
+    <example-modal />
     <br/>
     <b-collapse id="accordion-settings" visible accordion="main-accordion" role="tabpanel">
     <h2 class="text-center">1. Set your settings</h2>
@@ -766,8 +767,12 @@
 <script>
 // import axios from 'axios';
 import { calculateMods, getNumEggs, getBabies } from '../breed';
+import ExampleModal from './MobileWarningModal.vue';
 
 export default {
+  components: {
+    ExampleModal,
+  },
   name: 'Breed',
   title() {
     return 'Breed';
@@ -911,6 +916,14 @@ export default {
               helpText: 'Drugs/stimulants given to the one being bred that result in the womb\'s ovaries releasing more and more precious ova for the breeder\'s seed to claim.',
               min: 0,
               max: 50,
+              value: 0,
+            },
+            geneticSwaySpecies: {
+              id: 'geneticSwaySpecies',
+              label: 'Genetic Sway - Species',
+              helpText: 'Increases likelihood that any resulting child is of the bred\'s species. "My womb, my species."',
+              min: 0,
+              max: 100,
               value: 0,
             },
           },
@@ -1350,7 +1363,17 @@ export default {
       },
     };
   },
+  mounted() {
+    if ((/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    && !(window.localStorage.getItem('seenMobileModal'))) {
+      this.$modal.show('mobile-warning-modal');
+      window.localStorage.setItem('seenMobileModal', true);
+    }
+  },
   methods: {
+    modalClick() {
+      this.$modal.show('mobile-warning-modal');
+    },
     isMobile() {
       if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         return true;
