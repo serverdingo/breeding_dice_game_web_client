@@ -242,6 +242,15 @@ function getNumEggs(playerOptions, playerRolls) {
   return eggCount;
 }
 
+function getSpecies(diceRoller, traits) {
+  if (traits.secret.includes('kelvarnsCorruption')) {
+    if ((diceRoller.roll('1d100').result) < 90) {
+      return 2;
+    }
+  }
+  return diceRoller.roll('1d3').result;
+}
+
 function fertEgg(diceRoller, fertMod, babiesToAdd, traits) {
   let naturalRoll = diceRoller.roll('1d100').result;
   // +2 to fertilization roll if tightCervix bred trait
@@ -260,7 +269,7 @@ function fertEgg(diceRoller, fertMod, babiesToAdd, traits) {
     // If we get a positive value for roll + fertMod, thassa babby!
     babiesToAddCopy.push({
       gender: diceRoller.roll('1d3').result,
-      species: diceRoller.roll('1d3').result,
+      species: getSpecies(diceRoller, traits),
       natRoll: naturalRoll,
     });
   }
@@ -273,7 +282,7 @@ function fertEgg(diceRoller, fertMod, babiesToAdd, traits) {
     // Naturall roll of guaranteedMultipleCheck - extra baby guaranteed, and try for another!
     babiesToAddCopy.push({
       gender: diceRoller.roll('1d3').result,
-      species: diceRoller.roll('1d3').result,
+      species: getSpecies(diceRoller, traits),
       natRoll: naturalRoll,
     });
     babiesToAddCopy = fertEgg(diceRoller, fertMod, babiesToAddCopy, traits);

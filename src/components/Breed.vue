@@ -4,7 +4,7 @@
     <example-modal />
     <br/>
     <b-collapse id="accordion-settings" visible accordion="main-accordion" role="tabpanel">
-    <h2 class="text-center">1. Set your settings</h2>
+    <h2 class="text-center">1. 📄 Set your settings</h2>
     <br>
     <!--todo: add save settings button?-->
     <div class="accordion" role="tablist">
@@ -245,6 +245,33 @@
             </b-row>
           </b-card>
         </b-card-group>
+        <b-card-group v-if="traits.unlockedTraits.length > 0" deck2>
+          <b-card
+          border-variant="success"
+          header="Secret Traits"
+          header-bg-variant="success"
+          header-text-variant="white"
+          align="center"
+          text-variant="white" bg-variant="dark">
+            <b-row v-for="trait in traits.secretTraits" :key="trait.id">
+              <b-col md="auto" v-if="traits.unlockedTraits.includes(trait.traitId)">
+                <b-icon :id="`help-button-${trait.traitId}`" icon="question-circle-fill"
+                aria-label="Help" font-scale=".8">
+                </b-icon>
+                <b-tooltip :target="`help-button-${trait.traitId}`" triggers="hover">
+                  {{trait.description}}
+                </b-tooltip>
+              </b-col>
+              <b-col md="auto" v-if="traits.unlockedTraits.includes(trait.traitId)">
+                <input type="checkbox" :id="trait.traitId"
+                :value="trait.traitId" v-model="playerOptions.selectedTraits.secret">
+              </b-col>
+              <b-col md="auto" v-if="traits.unlockedTraits.includes(trait.traitId)">
+                <label :for="trait.traitId">{{trait.name}}</label>
+              </b-col>
+            </b-row>
+          </b-card>
+        </b-card-group>
       </div>
         </b-collapse>
       </b-card>
@@ -276,7 +303,7 @@
          |  _  /| |  | | |    | |     \___ \
          | | \ \| |__| | |____| |____ ____) |
          |_|  \_\\____/|______|______|_____/ -->
-    <h2 class="text-center">2. Roll your dice</h2><br>
+    <h2 class="text-center">2. 🎲 Roll your dice</h2><br>
 
     <div class="wrapper">
       <div class="column">
@@ -284,13 +311,13 @@
           <b-col class="pb-2">
             <b-button size="lg" id="rollBredButton"
               variant="primary" @click="rollDiceBred">
-              Roll Dice
+              🎲 Roll Dice 🎲
             </b-button>
           </b-col>
           <b-col class="pb-2">
             <b-button size="lg" id="rollBreederButton"
               variant="danger" @click="rollDiceBreeder">
-              Roll Dice
+              🎲 Roll Dice 🎲
             </b-button>
           </b-col>
         </b-row>
@@ -720,7 +747,7 @@
           Questions/Feedback? <a href="https://www.f-list.net/c/serv/">Send a note!</a>
         </b-col>
         <b-col md="auto">
-          <b-icon icon="suit-club-fill"></b-icon>
+          <b-icon icon="suit-club-fill" @click="unlockTrait('kelvarnsCorruption')"></b-icon>
         </b-col>
         <b-col md="auto">
           Based on <a href="https://www.f-list.net/c/taji%20amatsukaze/">these rules</a>
@@ -836,7 +863,13 @@ export default {
           },
         ],
         secretTraits: [
-          // 👀
+          {
+            name: 'Kelvarn\'s Corruption',
+            traitId: 'kelvarnsCorruption',
+            description: 'The wolf\'s dominance extends beyond just his demeanor, and is something that\'s written into his very genes. Before determining the species of any conceived child, a random number is selected between 1 and 100. Anything less than 90 results in the child automatically becoming a full-blooded wolf with a staggering resemblance to their sire.',
+          },
+        ],
+        unlockedTraits: [
         ],
       },
 
@@ -880,7 +913,7 @@ export default {
           ranges: {
             fertilityBonus: {
               id: 'fertilityBonus',
-              label: 'Fertility Bonus',
+              label: 'Fertility Bonus 💪',
               helpText: 'Someone\'s innate fertility. This is usually achieved either naturally or through some permanent enhancement or modification to the one being bred.',
               min: 0,
               max: 50,
@@ -888,7 +921,7 @@ export default {
             },
             fertilityAids: {
               id: 'fertilityAids',
-              label: 'Fertility Aids',
+              label: 'Fertility Aids 💊',
               helpText: 'A temporary boost to bred\'s fertility or ability to conceive. Pills, potions, medicine, energy boosts - things like that!',
               min: 0,
               max: 50,
@@ -912,7 +945,7 @@ export default {
             },
             ovulationDrugs: {
               id: 'ovulationDrugs',
-              label: 'Ovulation Drugs',
+              label: 'Ovulation Drugs 🥚',
               helpText: 'Drugs/stimulants given to the one being bred that result in the womb\'s ovaries releasing more and more precious ova for the breeder\'s seed to claim.',
               min: 0,
               max: 50,
@@ -920,7 +953,7 @@ export default {
             },
             geneticSwaySpecies: {
               id: 'geneticSwaySpecies',
-              label: 'Genetic Sway - Species',
+              label: 'Genetic Sway - Species 🧬',
               helpText: 'Increases likelihood that any resulting child is of the bred\'s species. "My womb, my species."',
               min: 0,
               max: 100,
@@ -953,7 +986,7 @@ export default {
             wetness: {
               id: 'wetness',
               label: 'Wetness',
-              helpText: 'While wetness may not <i>directly</i> boost fertility, the lack of \'friction\' can only serve to help.~',
+              helpText: 'While wetness may not *directly* boost fertility, the lack of \'friction\' can only serve to help.~',
               options: [
                 { text: 'None/Lube Needed', value: 'none' },
                 { text: 'Dripping', value: 'dripping' },
@@ -1014,7 +1047,7 @@ export default {
           ranges: {
             virilityBonus: {
               id: 'virilityBonus',
-              label: 'Virility Bonus',
+              label: 'Virility Bonus 💪',
               helpText: 'The breeder\'s natural virility. For whatever reason, this stud was born for making babies. Let\'s just hope they don\'t get even better at it as they go...',
               min: 0,
               max: 50,
@@ -1022,7 +1055,7 @@ export default {
             },
             virilityAids: {
               id: 'virilityAids',
-              label: 'Virility Aids',
+              label: 'Virility Aids 💊',
               helpText: '"Virilify-2000 - Serving size: 1 pill, huh? Fuck that. I say Serving size: 1 bottle. Increase as needed. Doctor\'s orders.~"',
               min: 0,
               max: 50,
@@ -1053,6 +1086,14 @@ export default {
               max: 50,
               value: 0,
               bad: true,
+            },
+            geneticSwaySpecies: {
+              id: 'geneticSwaySpecies',
+              label: 'Genetic Sway - Species 🧬',
+              helpText: 'The breeder\'s genes are so goddamn strong that they increase the likelihood that any resulting child is of the breeder\'s species.',
+              min: 0,
+              max: 100,
+              value: 0,
             },
           },
           radioGroups: {
@@ -1371,6 +1412,11 @@ export default {
     }
   },
   methods: {
+    unlockTrait(traitToUnlock) {
+      if (!this.traits.unlockedTraits.includes(traitToUnlock)) {
+        this.traits.unlockedTraits.push(traitToUnlock);
+      }
+    },
     modalClick() {
       this.$modal.show('mobile-warning-modal');
     },
